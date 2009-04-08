@@ -13,4 +13,5 @@ public class GameData {
 	
 	//need to add some field that would provide information about situation on the board
 	//in every time moment: 1,2,....,T
+	
 }
