@@ -412,7 +412,6 @@ public class BoardPanel extends JPanel {
                         if ((getCheckersArray()[i][j].getKind() == Sort.fullBlack || getCheckersArray()[i][j].getKind() == Sort.queenBlack) && checkBeating(getCheckersArray()[i][j]).size() != 0) {
                             mustBeFirstChosen.add(getCheckersArray()[i][j]);
                         }
-
                     }
                 }
             }
