@@ -9,22 +9,43 @@ import java.util.Set;
 public class MovesFinder {
 
 	private static final int BOARD_SIZE = 10;
-	private Checker[][] m_board;
-	private Author author;
+	private final Checker[][] m_board;
+	private final Author author;
 
 	/**
+	 * Creates a new instance of MovesFinder which will return possible moves for specified player in specified board
+	 * position.
 	 * 
 	 * @param board
+	 *            checkers positions. This class makes a copy of constructors argument so <code>board</code> will not be
+	 *            modified by it and can be kept by the caller
 	 * @param author
 	 *            author equal to <code>Author.owner</code> means that current player is playing white, otherwise
 	 *            current player is playing black
 	 */
 	public MovesFinder(Checker[][] board, Author author) {
-		if (board == null) {
+		if (board == null || author == null) {
 			throw new IllegalArgumentException();
 		}
-		this.m_board = board;
+		this.m_board = makeCopy(board);
 		this.author = author;
+	}
+
+	/**
+	 * Returns set of possible moves in given board situation. Each element of the set describes one sequence of moves.
+	 * A sequence may consist of one or more single moves. A sequence consists of more than one move if and only if each
+	 * of its moves is a beating. This method implements the following checkers rules:
+	 * <ul>
+	 * <li>beatings are obligatory
+	 * <li>if there is more than one sequence of beatings, sequence with most beatings must be chosen
+	 * <li>if several sequences of beating are tied for most number of beatings, any of them may be chosen
+	 * </ul>
+	 * If there are no legal moves for a player in given position, this method returns an empty set.
+	 * 
+	 * @return
+	 */
+	public Set<List<MoveMessage>> getPossibleMoves() {
+		return getPossibleMoves(true);
 	}
 
 	/**
@@ -36,13 +57,12 @@ public class MovesFinder {
 	 * <li>if there is more than one sequence of beatings, sequence with most beatings must be chosen
 	 * <li>if several sequences of beating are tied for most number of beatings, any of them may be chosen
 	 * </ul>
+	 * Also, this method will return non-beating moves if and only if parameter <code>lookForNonBeatings</code> is true.
+	 * If there are no legal moves for a player in given position, this method returns an empty set.
 	 * 
+	 * @param lookForNonBeatings
 	 * @return
 	 */
-	public Set<List<MoveMessage>> getPossibleMoves() {
-		return getPossibleMoves(true);
-	}
-
 	public Set<List<MoveMessage>> getPossibleMoves(boolean lookForNonBeatings) {
 		Sort myRegular = Author.owner.equals(author) ? Sort.fullWhite : Sort.fullBlack;
 		Sort myQueen = Author.owner.equals(author) ? Sort.queenWhite : Sort.queenBlack;
@@ -58,21 +78,20 @@ public class MovesFinder {
 				if (mySorts.contains(currChecker)) {
 					Checker[][] board = makeCopy(m_board);
 					List<Checker> beatings = checkBeating(currChecker, board);
-					if ((beatings == null || beatings.isEmpty()) && lookForNonBeatings) {
-						if (!foundBeating) {
-							List<Checker> nonBeatings = checkFree(currChecker, board);
-							for (Checker nonBeating : nonBeatings) {
-								MoveMessage mm = new MoveMessage(new Checker(currChecker), new Checker(nonBeating),
-										author, true);
-								List<MoveMessage> newResult = new ArrayList<MoveMessage>(1);
-								newResult.add(mm);
-								maxLength = updateResult(result, maxLength, newResult);
-							}
-						} else {
-							// cannot do anything, just continue iterating
+					if ((beatings == null || beatings.isEmpty()) && !foundBeating && lookForNonBeatings) {
+						List<Checker> nonBeatings = checkFree(currChecker, board);
+						for (Checker nonBeating : nonBeatings) {
+							MoveMessage mm = new MoveMessage(new Checker(currChecker), new Checker(nonBeating), author,
+									true);
+							List<MoveMessage> newResult = new ArrayList<MoveMessage>(1);
+							newResult.add(mm);
+							maxLength = updateResult(result, maxLength, newResult);
 						}
 					} else {
-						foundBeating = true;
+						if (!foundBeating) {
+							foundBeating = true;
+							result.clear();
+						}
 						for (Checker beating : beatings) {
 							MoveMessage mm = new MoveMessage(new Checker(currChecker), new Checker(beating), author,
 									false);
@@ -80,8 +99,8 @@ public class MovesFinder {
 							int jBeat = (currChecker.getJ() + beating.getJ()) / 2;
 							Checker[][] copy = makeCopy(board);
 							copy[iBeat][jBeat].setKind(Sort.blankBlack);
-							MovesFinder help = new MovesFinder(copy, author);
-							Set<List<MoveMessage>> helpResult = help.getPossibleMoves(false);
+							MovesFinder helper = new MovesFinder(copy, author);
+							Set<List<MoveMessage>> helpResult = helper.getPossibleMoves(false);
 							if (helpResult == null || helpResult.isEmpty()) {
 								mm.setEndsTurn(true);
 								List<MoveMessage> newResult = new ArrayList<MoveMessage>(1);
@@ -90,7 +109,9 @@ public class MovesFinder {
 							} else {
 								for (List<MoveMessage> list : helpResult) {
 									List<MoveMessage> newResult = new ArrayList<MoveMessage>(list.size() + 1);
-									newResult.add(mm);
+									MoveMessage newMessage = new MoveMessage(new Checker(mm.getFirst()), new Checker(
+											mm.getSecond()), mm.getMAuthor(), mm.isEndsTurn());
+									newResult.add(newMessage);
 									newResult.addAll(list);
 									maxLength = updateResult(result, maxLength, newResult);
 								}
@@ -111,6 +132,7 @@ public class MovesFinder {
 			results.add(newResult);
 			return maxLength;
 		}
+		// we found a longer result (longer beating sequence)
 		results.clear();
 		results.add(newResult);
 		return results.size();
@@ -125,7 +147,7 @@ public class MovesFinder {
 			}
 			result[i] = temp;
 		}
-		return null;
+		return result;
 	}
 
 	private ArrayList<Checker> checkBeating(Checker jb, Checker[][] board) {
@@ -342,7 +364,4 @@ public class MovesFinder {
 		}
 		return freeMoves;
 	}
-	// public Checker[][] getCheckersArray() {
-	// return board;
-	// }
 }
