@@ -44,26 +44,20 @@ public class MovesFinder {
 	 * 
 	 * @return
 	 */
-	public Set<List<MoveMessage>> getPossibleMoves() {
-		return getPossibleMoves(true);
+	public Set<List<MoveMessage>> getLegalMoves() {
+		return getMoves(true, true, new LongestResultsStrategy());
 	}
 
-	/**
-	 * Returns set of possible moves in given board situation. Each element of the set describes one sequence of moves.
-	 * A sequence may consist of one or more single moves. A sequence consists of more than one moves if and only if
-	 * each of its moves is a beating. This method implements the following checkers rules:
-	 * <ul>
-	 * <li>beatings are obligatory
-	 * <li>if there is more than one sequence of beatings, sequence with most beatings must be chosen
-	 * <li>if several sequences of beating are tied for most number of beatings, any of them may be chosen
-	 * </ul>
-	 * Also, this method will return non-beating moves if and only if parameter <code>lookForNonBeatings</code> is true.
-	 * If there are no legal moves for a player in given position, this method returns an empty set.
-	 * 
-	 * @param lookForNonBeatings
-	 * @return
-	 */
-	public Set<List<MoveMessage>> getPossibleMoves(boolean lookForNonBeatings) {
+	public Set<List<MoveMessage>> getAllNonBeatings() {
+		return getMoves(true, false, new AllResultsStrategy());
+	}
+
+	public Set<List<MoveMessage>> getAllBeatings() {
+		return getMoves(false, true, new AllResultsStrategy());
+	}
+
+	public Set<List<MoveMessage>> getMoves(boolean lookForNonBeatings, boolean lookForBeatings,
+			UpdateResultSetStrategy strategy) {
 		Sort myRegular = Author.owner.equals(author) ? Sort.fullWhite : Sort.fullBlack;
 		Sort myQueen = Author.owner.equals(author) ? Sort.queenWhite : Sort.queenBlack;
 		EnumSet<Sort> mySorts = EnumSet.of(myQueen, myRegular);
@@ -75,9 +69,9 @@ public class MovesFinder {
 		for (int i = 0; i < BOARD_SIZE; i++) {
 			for (int j = 0; j < BOARD_SIZE; j++) {
 				Checker currChecker = m_board[i][j];
-				if (mySorts.contains(currChecker)) {
+				if (mySorts.contains(currChecker.getKind())) {
 					Checker[][] board = makeCopy(m_board);
-					List<Checker> beatings = checkBeating(currChecker, board);
+					List<Checker> beatings = lookForBeatings ? checkBeating(currChecker, board) : null;
 					if ((beatings == null || beatings.isEmpty()) && !foundBeating && lookForNonBeatings) {
 						List<Checker> nonBeatings = checkFree(currChecker, board);
 						for (Checker nonBeating : nonBeatings) {
@@ -85,7 +79,7 @@ public class MovesFinder {
 									true);
 							List<MoveMessage> newResult = new ArrayList<MoveMessage>(1);
 							newResult.add(mm);
-							maxLength = updateResult(result, maxLength, newResult);
+							maxLength = strategy.updateResult(result, maxLength, newResult);
 						}
 					} else {
 						if (!foundBeating) {
@@ -100,12 +94,12 @@ public class MovesFinder {
 							Checker[][] copy = makeCopy(board);
 							copy[iBeat][jBeat].setKind(Sort.blankBlack);
 							MovesFinder helper = new MovesFinder(copy, author);
-							Set<List<MoveMessage>> helpResult = helper.getPossibleMoves(false);
+							Set<List<MoveMessage>> helpResult = helper.getMoves(false, true, strategy);
 							if (helpResult == null || helpResult.isEmpty()) {
 								mm.setEndsTurn(true);
 								List<MoveMessage> newResult = new ArrayList<MoveMessage>(1);
 								newResult.add(mm);
-								maxLength = updateResult(result, maxLength, newResult);
+								maxLength = strategy.updateResult(result, maxLength, newResult);
 							} else {
 								for (List<MoveMessage> list : helpResult) {
 									List<MoveMessage> newResult = new ArrayList<MoveMessage>(list.size() + 1);
@@ -113,7 +107,7 @@ public class MovesFinder {
 											mm.getSecond()), mm.getMAuthor(), mm.isEndsTurn());
 									newResult.add(newMessage);
 									newResult.addAll(list);
-									maxLength = updateResult(result, maxLength, newResult);
+									maxLength = strategy.updateResult(result, maxLength, newResult);
 								}
 							}
 						}
@@ -124,18 +118,31 @@ public class MovesFinder {
 		return result;
 	}
 
-	private int updateResult(Set<List<MoveMessage>> results, int maxLength, List<MoveMessage> newResult) {
-		if (maxLength > newResult.size()) {
-			return maxLength;
-		}
-		if (maxLength == newResult.size()) {
+	private interface UpdateResultSetStrategy {
+		int updateResult(Set<List<MoveMessage>> results, int maxLength, List<MoveMessage> newResult);
+	}
+
+	private class AllResultsStrategy implements UpdateResultSetStrategy {
+		public int updateResult(Set<List<MoveMessage>> results, int maxLength, List<MoveMessage> newResult) {
 			results.add(newResult);
-			return maxLength;
+			return Math.max(maxLength, newResult.size());
 		}
-		// we found a longer result (longer beating sequence)
-		results.clear();
-		results.add(newResult);
-		return results.size();
+	}
+
+	private class LongestResultsStrategy implements UpdateResultSetStrategy {
+		public int updateResult(Set<List<MoveMessage>> results, int maxLength, List<MoveMessage> newResult) {
+			if (maxLength > newResult.size()) {
+				return maxLength;
+			}
+			if (maxLength == newResult.size()) {
+				results.add(newResult);
+				return maxLength;
+			}
+			// we found a longer result (longer beating sequence)
+			results.clear();
+			results.add(newResult);
+			return results.size();
+		}
 	}
 
 	private Checker[][] makeCopy(Checker[][] board) {
