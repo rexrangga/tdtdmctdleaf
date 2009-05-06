@@ -4,16 +4,19 @@ import java.util.List;
 import java.util.Set;
 
 import draughts.Author;
+import draughts.FeatureCalculations;
 import draughts.MoveMessage;
 import draughts.MovesFinder;
+import draughts.Player;
+import draughts.TD;
 
 public class AlphaBetaWithMemory {
 
 	private LookupTable lookup = new LookupTable();
 
-	public int evaluate(Node node, int alpha, int beta, int depth, boolean myMove, Author whoAmI) {
+	public int evaluate(Node node, int alpha, int beta, int depth, boolean myMove, Player me, TD td) {
 
-		Author opponent = Author.owner.equals(whoAmI) ? Author.opponent : Author.owner;
+		Author opponent = Author.owner.equals(me.getMAuthor()) ? Author.opponent : Author.owner;
 
 		LookupTable.Data data = lookup.lookup(node, depth);
 		if (data != null) {
@@ -32,35 +35,39 @@ public class AlphaBetaWithMemory {
 		}
 
 		int g = 0;
-		boolean isTerminal = false;
-		// TODO howto check if node is terminal
+		MovesFinder mf = new MovesFinder(node.getBoard(), myMove ? me.getMAuthor() : opponent);
+		Set<List<MoveMessage>> legalMoves = mf.getLegalMoves();
+		boolean isTerminal = legalMoves.isEmpty();
 		if (isTerminal || depth == 0) {
-			// TODO g = evaluate
+			FeatureCalculations featuresCalculator = new FeatureCalculations(node.getBoard(), me);
+			td.calculateEvaluationFunction(featuresCalculator.getEvaluationFunctionFeatures());
 		} else if (myMove) {
 			g = Integer.MIN_VALUE;
 			int a = alpha;
-			MovesFinder mf = new MovesFinder(node.getBoard(), myMove ? whoAmI : opponent);
-			Set<List<MoveMessage>> s = mf.getLegalMoves();
-			for (List<MoveMessage> list : s) {
+			// MovesFinder mf = new MovesFinder(node.getBoard(), myMove ? me.getMAuthor() : opponent);
+			// Set<List<MoveMessage>> s = mf.getLegalMoves();
+			for (List<MoveMessage> list : legalMoves) {
 				if (g >= beta) {
 					break;
 				}
 				Node newNode = new Node(BoardUtils.performMoves(node.getBoard(), list));
-				g = Math.max(g, evaluate(newNode, a, beta, depth - 1, !myMove, whoAmI));
+				int newDepth = BoardUtils.isBeating(list) ? depth : depth - 1;
+				g = Math.max(g, evaluate(newNode, a, beta, newDepth, !myMove, me, td));
 				a = Math.max(a, g);
 			}
 
 		} else {
 			g = Integer.MAX_VALUE;
 			int b = beta;
-			MovesFinder mf = new MovesFinder(node.getBoard(), myMove ? whoAmI : opponent);
-			Set<List<MoveMessage>> s = mf.getLegalMoves();
-			for (List<MoveMessage> list : s) {
+			// MovesFinder mf = new MovesFinder(node.getBoard(), myMove ? me.getMAuthor() : opponent);
+			// Set<List<MoveMessage>> s = mf.getLegalMoves();
+			for (List<MoveMessage> list : legalMoves) {
 				if (g <= alpha) {
 					break;
 				}
 				Node newNode = new Node(BoardUtils.performMoves(node.getBoard(), list));
-				g = Math.min(g, evaluate(newNode, alpha, b, depth - 1, !myMove, whoAmI));
+				int newDepth = BoardUtils.isBeating(list) ? depth : depth - 1;
+				g = Math.min(g, evaluate(newNode, alpha, b, newDepth, !myMove, me, td));
 				b = Math.min(b, g);
 			}
 		}
