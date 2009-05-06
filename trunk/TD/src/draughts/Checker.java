@@ -100,7 +100,7 @@ public class Checker extends JButton {
 	}
 
 	/**
-	 * Zwraca wiersz. Numery wierszy rosną w dół i są w zakresie <0,7>.
+	 * Zwraca wiersz. Numery wierszy rosną w dół i są w zakresie <0,9>.
 	 * 
 	 * @return Wiersz pola.
 	 */
@@ -109,7 +109,7 @@ public class Checker extends JButton {
 	}
 
 	/**
-	 * Ustawia wiersz. Numery wierszy rosną w dół i są w zakresie <0,7>.
+	 * Ustawia wiersz. Numery wierszy rosną w dół i są w zakresie <0,9>.
 	 * 
 	 * @param i
 	 *            Wiersz pola.
@@ -119,7 +119,7 @@ public class Checker extends JButton {
 	}
 
 	/**
-	 * Zwraca kolumnę. Numery kolumn rosną w prawo i są w zakresie <0,7>.
+	 * Zwraca kolumnę. Numery kolumn rosną w prawo i są w zakresie <0,9>.
 	 * 
 	 * @return Kolumna pola.
 	 */
@@ -128,7 +128,7 @@ public class Checker extends JButton {
 	}
 
 	/**
-	 * Ustawia kolumnę. Numery kolumn rosną w prawo i są w zakresie <0,7>.
+	 * Ustawia kolumnę. Numery kolumn rosną w prawo i są w zakresie <0,9>.
 	 * 
 	 * @param j
 	 *            Kolumna pola.
