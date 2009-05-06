@@ -27,10 +27,14 @@ public class BoardUtils {
 		for (MoveMessage mm : moves) {
 			int dx = Math.abs(mm.getFirst().getI() - mm.getSecond().getI());
 			int dy = Math.abs(mm.getFirst().getJ() - mm.getSecond().getJ());
-			if (dx == 2 && dy == 2) {
-				int beatingI = (mm.getFirst().getI() + mm.getSecond().getI()) / 2;
-				int beatingJ = (mm.getFirst().getJ() + mm.getSecond().getJ()) / 2;
-				board[beatingI][beatingJ].setKind(Sort.blankBlack);
+			if (dx == dy && dx > 1) {
+				for (int i = 1; i < dx; i++) {
+					int directionX = (mm.getFirst().getI() - mm.getSecond().getI()) / dx;
+					int directionY = (mm.getFirst().getJ() - mm.getSecond().getJ()) / dy;
+					int iIdx = mm.getFirst().getI() + directionX * i;
+					int jIdx = mm.getFirst().getJ() + directionY * i;
+					board[iIdx][jIdx].setKind(Sort.blankBlack);
+				}
 				board[mm.getFirst().getI()][mm.getFirst().getJ()].setKind(Sort.blankBlack);
 				board[mm.getSecond().getI()][mm.getSecond().getJ()].setKind(mm.getFirst().getKind());
 			} else if (dx == 1 && dy == 1) {
@@ -56,6 +60,6 @@ public class BoardUtils {
 		MoveMessage mm = list.get(0);
 		int dx = Math.abs(mm.getFirst().getI() - mm.getSecond().getI());
 		int dy = Math.abs(mm.getFirst().getJ() - mm.getSecond().getJ());
-		return dx == 2 && dy == 2;
+		return dx == dy && dx > 1;
 	}
 }
