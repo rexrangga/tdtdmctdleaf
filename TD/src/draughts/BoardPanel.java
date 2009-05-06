@@ -59,7 +59,7 @@ public class BoardPanel extends JPanel {
     public void setKindsAndIcons() {
         for (int i = 0; i < 10; i++) {
             for (int j = 0; j < 10; j++) {
-                if (i >= 0 && i < 3) {
+                if (i >= 0 && i < 4) {
                     if ((i + j) % 2 != 0) {
                         checkersArray[i][j].setKind(Sort.fullBlack);
                     } else {
@@ -81,7 +81,7 @@ public class BoardPanel extends JPanel {
                 setCheckerIcon(checkersArray[i][j], checkersArray[i][j].getKind());
             }
         }
-        whites = blacks = 12;
+        whites = blacks = 20;
         chosen = false;
         chosenLast = null;
     }

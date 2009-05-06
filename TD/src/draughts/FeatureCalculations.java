@@ -26,15 +26,23 @@ public class FeatureCalculations {
 		this.oppBeatableMoves=oppMovesFinder.getAllNonBeatings();
 	}
 	
-	private int getMyPossibleBeatsCount(){
+	public int getMyPossibleMovesCount(){
 		return myBeatableMoves.size()+myNonBeatableMoves.size();
 	}
 	
-	private int getOppPossibleBeatsCount(){
+	public int getOppPossibleMovesCount(){
 		return oppBeatableMoves.size() + oppNonBeatableMoves.size();
 	}
+	                                   
+	public int getMyPossibleBeatsCount(){
+		return myBeatableMoves.size();
+	}
 	
-	private int getLongestBeatLength(Set<List<MoveMessage>> possibleMoves){
+	public int getOppPossibleBeatsCount(){
+		return oppBeatableMoves.size();
+	}
+	
+	public int getLongestBeatLength(Set<List<MoveMessage>> possibleMoves){
 		int max=0;
 		
 		Iterator<List<MoveMessage>> it=possibleMoves.iterator();
@@ -45,6 +53,25 @@ public class FeatureCalculations {
 		}
 		return max;
 	}
+	
+	public int getPossibleQueensCount(Set<List<MoveMessage>> moves){
+		int queensCount=0;
+		Iterator<List<MoveMessage>> it=moves.iterator();
+		
+		int queensRow=0;
+		if(player.getMAuthor()==Author.opponent)
+			queensRow=9;
+		
+		while(it.hasNext()){
+			List<MoveMessage> cur=it.next();
+			Checker lastChecker=cur.get(cur.size()).getSecond();
+			if(lastChecker.getI()==queensRow)
+				queensCount++;
+		}
+	
+		return queensCount;
+	}
+
 	
 	public double[] getEvaluationFunctionFeatures(){
 		
@@ -81,9 +108,12 @@ public class FeatureCalculations {
 		features[5]=getMyPossibleBeatsCount();
 		features[6]=getLongestBeatLength(oppBeatableMoves);
 		features[7]=getLongestBeatLength(myBeatableMoves);
+		features[8]=getOppPossibleMovesCount();
+		features[9]=getMyPossibleMovesCount();
+		features[10]=getPossibleQueensCount(oppBeatableMoves) + getPossibleQueensCount(oppNonBeatableMoves);
+		features[11]=getPossibleQueensCount(myBeatableMoves) + getPossibleQueensCount(myNonBeatableMoves);
 		
-		
-		return new double[0];
+		return features;
 	}
 	
 }
