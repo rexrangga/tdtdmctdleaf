@@ -4,6 +4,7 @@ import java.util.List;
 
 import draughts.Checker;
 import draughts.MoveMessage;
+import draughts.Sort;
 
 public class BoardUtils {
 
@@ -23,7 +24,38 @@ public class BoardUtils {
 
 	public static Checker[][] performMoves(Checker[][] board, List<MoveMessage> moves) {
 		Checker[][] result = makeCopy(board);
-		// TODO
+		for (MoveMessage mm : moves) {
+			int dx = Math.abs(mm.getFirst().getI() - mm.getSecond().getI());
+			int dy = Math.abs(mm.getFirst().getJ() - mm.getSecond().getJ());
+			if (dx == 2 && dy == 2) {
+				int beatingI = (mm.getFirst().getI() + mm.getSecond().getI()) / 2;
+				int beatingJ = (mm.getFirst().getJ() + mm.getSecond().getJ()) / 2;
+				board[beatingI][beatingJ].setKind(Sort.blankBlack);
+				board[mm.getFirst().getI()][mm.getFirst().getJ()].setKind(Sort.blankBlack);
+				board[mm.getSecond().getI()][mm.getSecond().getJ()].setKind(mm.getFirst().getKind());
+			} else if (dx == 1 && dy == 1) {
+				board[mm.getFirst().getI()][mm.getFirst().getJ()].setKind(Sort.blankBlack);
+				board[mm.getSecond().getI()][mm.getSecond().getJ()].setKind(mm.getFirst().getKind());
+			} else {
+				throw new RuntimeException("first [i = " + mm.getFirst().getI() + ", j = " + mm.getFirst().getJ()
+						+ "] second [i = " + mm.getSecond().getI() + ", j = " + mm.getSecond().getJ() + "]");
+			}
+			if (mm.isEndsTurn()) {
+				if (mm.getFirst().getKind().equals(Sort.fullWhite) && mm.getSecond().getI() == 0) {
+					board[mm.getSecond().getI()][mm.getSecond().getJ()].setKind(Sort.queenWhite);
+				}
+				if (mm.getFirst().getKind().equals(Sort.fullBlack) && mm.getSecond().getI() == 9) {
+					board[mm.getSecond().getI()][mm.getSecond().getJ()].setKind(Sort.queenBlack);
+				}
+			}
+		}
 		return result;
+	}
+
+	public static boolean isBeating(List<MoveMessage> list) {
+		MoveMessage mm = list.get(0);
+		int dx = Math.abs(mm.getFirst().getI() - mm.getSecond().getI());
+		int dy = Math.abs(mm.getFirst().getJ() - mm.getSecond().getJ());
+		return dx == 2 && dy == 2;
 	}
 }
