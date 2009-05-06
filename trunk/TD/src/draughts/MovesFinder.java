@@ -1,6 +1,7 @@
 package draughts;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.List;
@@ -91,13 +92,7 @@ public class MovesFinder {
 						for (Checker beating : beatings) {
 							MoveMessage mm = new MoveMessage(new Checker(currChecker), new Checker(beating), author,
 									false);
-							int iBeat = (currChecker.getI() + beating.getI()) / 2;
-							int jBeat = (currChecker.getJ() + beating.getJ()) / 2;
-							Checker[][] copy = BoardUtils.makeCopy(board);
-							copy[currChecker.getI()][currChecker.getJ()].setKind(Sort.blankBlack);
-							copy[iBeat][jBeat].setKind(Sort.blankBlack);
-							copy[beating.getI()][beating.getJ()].setKind(currChecker.getKind());
-
+							Checker[][] copy = BoardUtils.performMoves(board, Arrays.asList(mm));
 							MovesFinder helper = new MovesFinder(copy, author);
 							Set<List<MoveMessage>> helpResult = helper.getMoves(false, true, strategy);
 							if (helpResult == null || helpResult.isEmpty()) {
