@@ -6,6 +6,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import draughts.moves.BoardUtils;
+
 public class MovesFinder {
 
 	private static final int BOARD_SIZE = 10;
@@ -27,7 +29,7 @@ public class MovesFinder {
 		if (board == null || author == null) {
 			throw new IllegalArgumentException();
 		}
-		this.m_board = makeCopy(board);
+		this.m_board = BoardUtils.makeCopy(board);
 		this.author = author;
 	}
 
@@ -70,7 +72,7 @@ public class MovesFinder {
 			for (int j = 0; j < BOARD_SIZE; j++) {
 				Checker currChecker = m_board[i][j];
 				if (mySorts.contains(currChecker.getKind())) {
-					Checker[][] board = makeCopy(m_board);
+					Checker[][] board = BoardUtils.makeCopy(m_board);
 					List<Checker> beatings = lookForBeatings ? checkBeating(currChecker, board) : null;
 					if ((beatings == null || beatings.isEmpty()) && !foundBeating && lookForNonBeatings) {
 						List<Checker> nonBeatings = checkFree(currChecker, board);
@@ -91,8 +93,11 @@ public class MovesFinder {
 									false);
 							int iBeat = (currChecker.getI() + beating.getI()) / 2;
 							int jBeat = (currChecker.getJ() + beating.getJ()) / 2;
-							Checker[][] copy = makeCopy(board);
+							Checker[][] copy = BoardUtils.makeCopy(board);
+							copy[currChecker.getI()][currChecker.getJ()].setKind(Sort.blankBlack);
 							copy[iBeat][jBeat].setKind(Sort.blankBlack);
+							copy[beating.getI()][beating.getJ()].setKind(currChecker.getKind());
+
 							MovesFinder helper = new MovesFinder(copy, author);
 							Set<List<MoveMessage>> helpResult = helper.getMoves(false, true, strategy);
 							if (helpResult == null || helpResult.isEmpty()) {
@@ -145,17 +150,17 @@ public class MovesFinder {
 		}
 	}
 
-	private Checker[][] makeCopy(Checker[][] board) {
-		Checker[][] result = new Checker[BOARD_SIZE][];
-		for (int i = 0; i < BOARD_SIZE; i++) {
-			Checker[] temp = new Checker[BOARD_SIZE];
-			for (int j = 0; j < BOARD_SIZE; j++) {
-				temp[j] = new Checker(board[i][j]);
-			}
-			result[i] = temp;
-		}
-		return result;
-	}
+	// private Checker[][] makeCopy(Checker[][] board) {
+	// Checker[][] result = new Checker[BOARD_SIZE][];
+	// for (int i = 0; i < BOARD_SIZE; i++) {
+	// Checker[] temp = new Checker[BOARD_SIZE];
+	// for (int j = 0; j < BOARD_SIZE; j++) {
+	// temp[j] = new Checker(board[i][j]);
+	// }
+	// result[i] = temp;
+	// }
+	// return result;
+	// }
 
 	private ArrayList<Checker> checkBeating(Checker jb, Checker[][] board) {
 		ArrayList<Checker> beatingMoves = new ArrayList<Checker>();
