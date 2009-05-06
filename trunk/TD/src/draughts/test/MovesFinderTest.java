@@ -95,10 +95,37 @@ public class MovesFinderTest {
 		System.out.println("+ success");
 	}
 
+	private static void testTwoBeatings() {
+		Checker[][] board = createEmptyBoard();
+		board[9][2].setKind(Sort.fullWhite);
+		board[8][3].setKind(Sort.fullBlack);
+		board[8][1].setKind(Sort.fullBlack);
+		board[6][5].setKind(Sort.fullBlack);
+		Set<List<MoveMessage>> s = new MovesFinder(board, Author.owner).getLegalMoves();
+		Assert.assertNotNull(s);
+		Assert.assertTrue(s.size() == 1);
+		Iterator<List<MoveMessage>> it = s.iterator();
+		List<MoveMessage> list = it.next();
+		Assert.assertNotNull(list);
+		Assert.assertTrue(list.size() == 2);
+		MoveMessage mm = list.get(0);
+		Assert.assertEquals(9, mm.getFirst().getI());
+		Assert.assertEquals(2, mm.getFirst().getJ());
+		Assert.assertEquals(7, mm.getSecond().getI());
+		Assert.assertEquals(4, mm.getSecond().getJ());
+		mm = list.get(1);
+		Assert.assertEquals(7, mm.getFirst().getI());
+		Assert.assertEquals(4, mm.getFirst().getJ());
+		Assert.assertEquals(5, mm.getSecond().getI());
+		Assert.assertEquals(6, mm.getSecond().getJ());
+		System.out.println("+ success");
+	}
+
 	public static void main(String[] args) {
 		testEmpty();
 		testSimple();
 		testSimple2();
 		testBeating();
+		testTwoBeatings();
 	}
 }
