@@ -62,11 +62,12 @@ public class LookupTable {
 class Key {
 
 	private final Node node;
-	private final int depth;
+
+	// private final int depth;
 
 	public Key(Node node, int depth) {
 		this.node = new Node(node.getBoard());
-		this.depth = depth;
+		// this.depth = depth;
 	}
 
 	@Override
