@@ -16,7 +16,11 @@ public class BoardUtils {
 		for (int i = 0; i < BOARD_SIZE; i++) {
 			CheckerModel[] temp = new CheckerModel[BOARD_SIZE];
 			for (int j = 0; j < BOARD_SIZE; j++) {
-				temp[j] = new CheckerModel(board[i][j]);
+				if (board[i][j] == null) {
+					temp[j] = null;
+				} else {
+					temp[j] = new CheckerModel(board[i][j]);
+				}
 			}
 			result[i] = temp;
 		}
@@ -28,7 +32,13 @@ public class BoardUtils {
 		for (int i = 0; i < BOARD_SIZE; i++) {
 			CheckerModel[] temp = new CheckerModel[BOARD_SIZE];
 			for (int j = 0; j < BOARD_SIZE; j++) {
-				temp[j] = new CheckerModel(board[i][j].getI(), board[i][j].getJ(), board[i][j].getKind());
+
+				Sort kind = board[i][j].getKind();
+				if (Sort.blankBlack.equals(kind) || Sort.blankWhite.equals(kind)) {
+					temp[j] = null;
+				} else {
+					temp[j] = new CheckerModel(board[i][j].getI(), board[i][j].getJ(), board[i][j].getKind());
+				}
 			}
 			result[i] = temp;
 		}
@@ -46,13 +56,17 @@ public class BoardUtils {
 				for (int i = 1; i < dx; i++) {
 					int iIdx = mm.getFirst().getI() + directionX * i;
 					int jIdx = mm.getFirst().getJ() + directionY * i;
-					result[iIdx][jIdx].setKind(Sort.blankBlack);
+					// result[iIdx][jIdx].setKind(Sort.blankBlack);
+					result[iIdx][jIdx] = null;
 				}
-				result[mm.getFirst().getI()][mm.getFirst().getJ()].setKind(Sort.blankBlack);
-				result[mm.getSecond().getI()][mm.getSecond().getJ()].setKind(mm.getFirst().getKind());
+				// result[mm.getFirst().getI()][mm.getFirst().getJ()].setKind(Sort.blankBlack);
+				result[mm.getFirst().getI()][mm.getFirst().getJ()] = null;
+				result[mm.getSecond().getI()][mm.getSecond().getJ()] = new CheckerModel(mm.getSecond().getI(),
+						mm.getSecond().getJ(), mm.getFirst().getKind());
 			} else if (dx == 1 && dy == 1) {
-				result[mm.getFirst().getI()][mm.getFirst().getJ()].setKind(Sort.blankBlack);
-				result[mm.getSecond().getI()][mm.getSecond().getJ()].setKind(mm.getFirst().getKind());
+				result[mm.getFirst().getI()][mm.getFirst().getJ()] = null;
+				result[mm.getSecond().getI()][mm.getSecond().getJ()] = new CheckerModel(mm.getSecond().getI(),
+						mm.getSecond().getJ(), mm.getFirst().getKind());
 			} else {
 				throw new RuntimeException("first [i = " + mm.getFirst().getI() + ", j = " + mm.getFirst().getJ()
 						+ "] second [i = " + mm.getSecond().getI() + ", j = " + mm.getSecond().getJ() + "]");

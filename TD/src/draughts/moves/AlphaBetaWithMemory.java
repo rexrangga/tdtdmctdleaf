@@ -15,7 +15,7 @@ public class AlphaBetaWithMemory {
 	private LookupTable lookup = new LookupTable();
 
 	public int evaluate(Node node, int alpha, int beta, int depth, boolean myMove, Player me, ITD td) {
-		System.out.println("evaluate");
+		// System.out.println("evaluate");
 		Author opponent = Author.owner.equals(me.getMAuthor()) ? Author.opponent : Author.owner;
 
 		LookupTable.Data data = lookup.lookup(node, depth);

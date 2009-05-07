@@ -73,7 +73,7 @@ public class MovesFinder {
 		for (int i = 0; i < BOARD_SIZE; i++) {
 			for (int j = 0; j < BOARD_SIZE; j++) {
 				CheckerModel currChecker = m_board[i][j];
-				if (mySorts.contains(currChecker.getKind())) {
+				if (currChecker != null && mySorts.contains(currChecker.getKind())) {
 					CheckerModel[][] board = BoardUtils.makeCopy(m_board);
 					List<CheckerModel> beatings = lookForBeatings ? checkBeating(currChecker, board) : null;
 					System.out.println("!!! " + (beatings != null ? beatings.size() : 0));
@@ -177,23 +177,25 @@ public class MovesFinder {
 			supporter2 = Sort.queenBlack;
 		}
 
+		EnumSet<Sort> opponents = EnumSet.of(opponent1, opponent2);
+		EnumSet<Sort> supporters = EnumSet.of(supporter1, supporter2);
+
 		if (jb.getKind() == Sort.queenWhite || jb.getKind() == Sort.queenBlack) {
 			for (int p = 2; p < 10; p++) {
 				if (i + p < 10 && j + p < 10) {
-					if (board[i + p - 1][j + p - 1].getKind() == supporter1
-							|| board[i + p - 1][j + p - 1].getKind() == supporter2) {
+					if (board[i + p - 1][j + p - 1] != null
+							&& supporters.contains(board[i + p - 1][j + p - 1].getKind())) {
 						break;
 					}
-					if (board[i + p - 1][j + p - 1].getKind() == opponent1
-							|| board[i + p - 1][j + p - 1].getKind() == opponent2) {
-						if (board[i + p][j + p].getKind() != Sort.blankBlack) {
+					if (board[i + p - 1][j + p - 1] != null
+							&& supporters.contains(board[i + p - 1][j + p - 1].getKind())) {
+						if (board[i + p][j + p] != null) {
 							break;
 						}
-						beatingMoves.add(board[i + p][j + p]);
+						beatingMoves.add(new CheckerModel(i + p, j + p, Sort.blankBlack));
 						int q = 1;
-						while (i + p + q < 10 && j + p + q < 10
-								&& board[i + p + q][j + p + q].getKind() == Sort.blankBlack) {
-							beatingMoves.add(board[i + p + q][j + p + q]);
+						while (i + p + q < 10 && j + p + q < 10 && board[i + p + q][j + p + q] == null) {
+							beatingMoves.add(new CheckerModel(i + p + q, j + p + q, Sort.blankBlack));
 							q++;
 						}
 						break;
@@ -202,20 +204,19 @@ public class MovesFinder {
 			}
 			for (int p = 2; p < 10; p++) {
 				if (i + p < 10 && j - p >= 0) {
-					if (board[i + p - 1][j - p + 1].getKind() == supporter1
-							|| board[i + p - 1][j - p + 1].getKind() == supporter2) {
+					if (board[i + p - 1][j - p + 1] != null
+							&& supporters.contains(board[i + p - 1][j - p + 1].getKind())) {
 						break;
 					}
-					if (board[i + p - 1][j - p + 1].getKind() == opponent1
-							|| board[i + p - 1][j - p + 1].getKind() == opponent2) {
-						if (board[i + p][j - p].getKind() != Sort.blankBlack) {
+					if (board[i + p - 1][j - p + 1] != null
+							&& opponents.contains(board[i + p - 1][j - p + 1].getKind())) {
+						if (board[i + p][j - p] != null) {
 							break;
 						}
-						beatingMoves.add(board[i + p][j - p]);
+						beatingMoves.add(new CheckerModel(i + p, j - p, Sort.blankBlack));
 						int q = 1;
-						while (i + p + q < 10 && j - p - q >= 0
-								&& board[i + p + q][j - p - q].getKind() == Sort.blankBlack) {
-							beatingMoves.add(board[i + p + q][j - p - q]);
+						while (i + p + q < 10 && j - p - q >= 0 && board[i + p + q][j - p - q] == null) {
+							beatingMoves.add(new CheckerModel(i + p + q, j - p - q, Sort.blankBlack));
 							q++;
 						}
 						break;
@@ -224,20 +225,19 @@ public class MovesFinder {
 			}
 			for (int p = 2; p < 10; p++) {
 				if (i - p >= 0 && j + p < 10) {
-					if (board[i - p + 1][j + p - 1].getKind() == supporter1
-							|| board[i - p + 1][j + p - 1].getKind() == supporter2) {
+					if (board[i - p + 1][j + p - 1] != null
+							&& supporters.contains(board[i - p + 1][j + p - 1].getKind())) {
 						break;
 					}
-					if (board[i - p + 1][j + p - 1].getKind() == opponent1
-							|| board[i - p + 1][j + p - 1].getKind() == opponent2) {
-						if (board[i - p][j + p].getKind() != Sort.blankBlack) {
+					if (board[i - p + 1][j + p - 1] != null
+							&& opponents.contains(board[i - p + 1][j + p - 1].getKind())) {
+						if (board[i - p][j + p] != null) {
 							break;
 						}
-						beatingMoves.add(board[i - p][j + p]);
+						beatingMoves.add(new CheckerModel(i - p, j + p, Sort.blankBlack));
 						int q = 1;
-						while (i - p - q >= 0 && j + p + q < 10
-								&& board[i - p - q][j + p + q].getKind() == Sort.blankBlack) {
-							beatingMoves.add(board[i - p - q][j + p + q]);
+						while (i - p - q >= 0 && j + p + q < 10 && board[i - p - q][j + p + q] == null) {
+							beatingMoves.add(new CheckerModel(i - p - q, j + p + q, Sort.blankBlack));
 							q++;
 						}
 						break;
@@ -246,20 +246,19 @@ public class MovesFinder {
 			}
 			for (int p = 2; p < 10; p++) {
 				if (i - p >= 0 && j - p >= 0) {
-					if (board[i - p + 1][j - p + 1].getKind() == supporter1
-							|| board[i - p + 1][j - p + 1].getKind() == supporter2) {
+					if (board[i - p + 1][j - p + 1] != null
+							&& supporters.contains(board[i - p + 1][j - p + 1].getKind())) {
 						break;
 					}
-					if (board[i - p + 1][j - p + 1].getKind() == opponent1
-							|| board[i - p + 1][j - p + 1].getKind() == opponent2) {
-						if (board[i - p][j - p].getKind() != Sort.blankBlack) {
+					if (board[i - p + 1][j - p + 1] != null
+							&& opponents.contains(board[i - p + 1][j - p + 1].getKind())) {
+						if (board[i - p][j - p] != null) {
 							break;
 						}
-						beatingMoves.add(board[i - p][j - p]);
+						beatingMoves.add(new CheckerModel(i - p, j - p, Sort.blankBlack));
 						int q = 1;
-						while (i - p - q >= 0 && j - p - q >= 0
-								&& board[i - p - q][j - p - q].getKind() == Sort.blankBlack) {
-							beatingMoves.add(board[i - p - q][j - p - q]);
+						while (i - p - q >= 0 && j - p - q >= 0 && board[i - p - q][j - p - q] == null) {
+							beatingMoves.add(new CheckerModel(i - p - q, j - p - q, Sort.blankBlack));
 							q++;
 						}
 						break;
@@ -268,30 +267,30 @@ public class MovesFinder {
 			}
 		} else {
 			if (i - 2 >= 0 && j - 2 >= 0) {
-				if ((board[i - 1][j - 1].getKind() == opponent1 || board[i - 1][j - 1].getKind() == opponent2)
-						&& board[i - 2][j - 2].getKind() == Sort.blankBlack) {
-					beatingMoves.add(board[i - 2][j - 2]);
+				if (board[i - 1][j - 1] != null && opponents.contains(board[i - 1][j - 1].getKind())
+						&& board[i - 2][j - 2] == null) {
+					beatingMoves.add(new CheckerModel(i - 2, j - 2, Sort.blankBlack));
 				}
 
 			}
 			if (i - 2 >= 0 && j + 2 < 10) {
-				if ((board[i - 1][j + 1].getKind() == opponent1 || board[i - 1][j + 1].getKind() == opponent2)
-						&& board[i - 2][j + 2].getKind() == Sort.blankBlack) {
-					beatingMoves.add(board[i - 2][j + 2]);
+				if (board[i - 1][j + 1] != null && opponents.contains(board[i - 1][j + 1].getKind())
+						&& board[i - 2][j + 2] == null) {
+					beatingMoves.add(new CheckerModel(i - 2, j + 2, Sort.blankBlack));
 				}
 
 			}
 			if (i + 2 < 10 && j - 2 >= 0) {
-				if ((board[i + 1][j - 1].getKind() == opponent1 || board[i + 1][j - 1].getKind() == opponent2)
-						&& board[i + 2][j - 2].getKind() == Sort.blankBlack) {
-					beatingMoves.add(board[i + 2][j - 2]);
+				if (board[i + 1][j - 1] != null && opponents.contains(board[i + 1][j - 1].getKind())
+						&& board[i + 2][j - 2] == null) {
+					beatingMoves.add(new CheckerModel(i + 2, j - 2, Sort.blankBlack));
 				}
 
 			}
 			if (i + 2 < 10 && j + 2 < 10) {
-				if ((board[i + 1][j + 1].getKind() == opponent1 || board[i + 1][j + 1].getKind() == opponent2)
-						&& board[i + 2][j + 2].getKind() == Sort.blankBlack) {
-					beatingMoves.add(board[i + 2][j + 2]);
+				if (board[i + 1][j + 1] != null && opponents.contains(board[i + 1][j + 1].getKind())
+						&& board[i + 2][j + 2] == null) {
+					beatingMoves.add(new CheckerModel(i + 2, j + 2, Sort.blankBlack));
 				}
 
 			}
@@ -313,31 +312,31 @@ public class MovesFinder {
 		int j = jb.getJ();
 		if (jb.getKind() == Sort.fullWhite) {
 			if (i - 1 >= 0 && j - 1 >= 0) {
-				if (board[i - 1][j - 1].getKind() == Sort.blankBlack) {
-					freeMoves.add(board[i - 1][j - 1]);
+				if (board[i - 1][j - 1] == null) {
+					freeMoves.add(new CheckerModel(i - 1, j - 1, Sort.blankBlack));
 				}
 			}
 			if (i - 1 >= 0 && j + 1 < 10) {
-				if (board[i - 1][j + 1].getKind() == Sort.blankBlack) {
-					freeMoves.add(board[i - 1][j + 1]);
+				if (board[i - 1][j + 1] == null) {
+					freeMoves.add(new CheckerModel(i - 1, j + 1, Sort.blankBlack));
 				}
 			}
 		} else if (jb.getKind() == Sort.fullBlack) {
 			if (i + 1 < 10 && j - 1 >= 0) {
-				if (board[i + 1][j - 1].getKind() == Sort.blankBlack) {
-					freeMoves.add(board[i + 1][j - 1]);
+				if (board[i + 1][j - 1] == null) {
+					freeMoves.add(new CheckerModel(i + 1, j - 1, Sort.blankBlack));
 				}
 			}
 			if (i + 1 < 10 && j + 1 < 10) {
-				if (board[i + 1][j + 1].getKind() == Sort.blankBlack) {
-					freeMoves.add(board[i + 1][j + 1]);
+				if (board[i + 1][j + 1] == null) {
+					freeMoves.add(new CheckerModel(i + 1, j + 1, Sort.blankBlack));
 				}
 			}
 		} else if (jb.getKind() == Sort.queenWhite || jb.getKind() == Sort.queenBlack) {
 			for (int p = 1; p < 10; p++) {
 				if (i + p < 10 && j + p < 10) {
-					if (board[i + p][j + p].getKind() == Sort.blankBlack) {
-						freeMoves.add(board[i + p][j + p]);
+					if (board[i + p][j + p] == null) {
+						freeMoves.add(new CheckerModel(i + p, j + p, Sort.blankBlack));
 					} else {
 						break;
 					}
@@ -345,8 +344,8 @@ public class MovesFinder {
 			}
 			for (int p = 1; p < 10; p++) {
 				if (i + p < 10 && j - p >= 0) {
-					if (board[i + p][j - p].getKind() == Sort.blankBlack) {
-						freeMoves.add(board[i + p][j - p]);
+					if (board[i + p][j - p] == null) {
+						freeMoves.add(new CheckerModel(i + p, j - p, Sort.blankBlack));
 					} else {
 						break;
 					}
@@ -354,8 +353,8 @@ public class MovesFinder {
 			}
 			for (int p = 1; p < 10; p++) {
 				if (i - p >= 0 && j + p < 10) {
-					if (board[i - p][j + p].getKind() == Sort.blankBlack) {
-						freeMoves.add(board[i - p][j + p]);
+					if (board[i - p][j + p] == null) {
+						freeMoves.add(new CheckerModel(i - p, j + p, Sort.blankBlack));
 					} else {
 						break;
 					}
@@ -363,8 +362,8 @@ public class MovesFinder {
 			}
 			for (int p = 1; p < 10; p++) {
 				if (i - p >= 0 && j - p >= 0) {
-					if (board[i - p][j - p].getKind() == Sort.blankBlack) {
-						freeMoves.add(board[i - p][j - p]);
+					if (board[i - p][j - p] == null) {
+						freeMoves.add(new CheckerModel(i - p, j - p, Sort.blankBlack));
 					} else {
 						break;
 					}
