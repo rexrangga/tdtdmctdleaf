@@ -8,8 +8,8 @@ import java.io.Serializable;
  */
 public class MoveMessage implements Serializable {
 
-    private Checker first;
-    private Checker second;
+    private CheckerModel first;
+    private CheckerModel second;
     private Author mAuthor;
     private boolean endsTurn;
 
@@ -20,7 +20,7 @@ public class MoveMessage implements Serializable {
      * @param mAuthor Typ gracza, który wykonuje ruch.
      * @param endsTurn Informacja o zakończeniu sekwencji ruchów.
      */
-    public MoveMessage(Checker first, Checker second, Author mAuthor, boolean endsTurn) {
+    public MoveMessage(CheckerModel first, CheckerModel second, Author mAuthor, boolean endsTurn) {
         this.first = first;
         this.second = second;
         this.mAuthor = mAuthor;
@@ -31,7 +31,7 @@ public class MoveMessage implements Serializable {
      * Zwraca pole, z którego ruszał się gracz.
      * @return Pole, z którego ruszał się gracz.
      */
-    public Checker getFirst() {
+    public CheckerModel getFirst() {
         return first;
     }
 
@@ -39,7 +39,7 @@ public class MoveMessage implements Serializable {
      * Ustawia pole,z którego ruszał się gracz.
      * @param first Pole,z którego ruszał się gracz.
      */
-    public void setFirst(Checker first) {
+    public void setFirst(CheckerModel first) {
         this.first = first;
     }
 
@@ -47,7 +47,7 @@ public class MoveMessage implements Serializable {
      * Zwraca pole, na które ruszył się gracz.
      * @return Pole, na które ruszył się gracz.
      */
-    public Checker getSecond() {
+    public CheckerModel getSecond() {
         return second;
     }
 
@@ -55,7 +55,7 @@ public class MoveMessage implements Serializable {
      * Ustawia pole, na które ruszył się gracz.
      * @param second Pole, na które ruszył się gracz.
      */
-    public void setSecond(Checker second) {
+    public void setSecond(CheckerModel second) {
         this.second = second;
     }
 

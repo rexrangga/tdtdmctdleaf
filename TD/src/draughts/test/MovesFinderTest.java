@@ -8,6 +8,7 @@ import org.junit.Assert;
 
 import draughts.Author;
 import draughts.Checker;
+import draughts.CheckerModel;
 import draughts.MoveMessage;
 import draughts.MovesFinder;
 import draughts.Sort;
@@ -16,12 +17,12 @@ public class MovesFinderTest {
 
 	private static final int BOARD_SIZE = 10;
 
-	private static Checker[][] createEmptyBoard() {
-		Checker[][] board = new Checker[BOARD_SIZE][];
+	private static CheckerModel[][] createEmptyBoard() {
+		CheckerModel[][] board = new CheckerModel[BOARD_SIZE][];
 		for (int i = 0; i < BOARD_SIZE; i++) {
-			Checker[] temp = new Checker[BOARD_SIZE];
+			CheckerModel[] temp = new CheckerModel[BOARD_SIZE];
 			for (int j = 0; j < BOARD_SIZE; j++) {
-				temp[j] = new Checker(i, j);
+				temp[j] = new CheckerModel(i, j, null);
 				if ((i + j) % 2 != 0) {
 					temp[j].setKind(Sort.blankBlack);
 				} else {
@@ -34,7 +35,7 @@ public class MovesFinderTest {
 	}
 
 	private static void testEmpty() {
-		Checker[][] board = createEmptyBoard();
+		CheckerModel[][] board = createEmptyBoard();
 		Set<?> s = new MovesFinder(board, Author.owner).getLegalMoves();
 		Assert.assertTrue(s.isEmpty());
 		System.out.println("+ success");
@@ -44,7 +45,7 @@ public class MovesFinderTest {
 	 * A checker on empty board - one possible move
 	 */
 	private static void testSimple() {
-		Checker[][] board = createEmptyBoard();
+		CheckerModel[][] board = createEmptyBoard();
 		board[9][0].setKind(Sort.fullWhite);
 		Set<List<MoveMessage>> s = new MovesFinder(board, Author.owner).getLegalMoves();
 		Assert.assertNotNull(s);
@@ -61,7 +62,7 @@ public class MovesFinderTest {
 	}
 
 	private static void testSimple2() {
-		Checker[][] board = createEmptyBoard();
+		CheckerModel[][] board = createEmptyBoard();
 		board[9][2].setKind(Sort.fullWhite);
 		Set<List<MoveMessage>> s = new MovesFinder(board, Author.owner).getLegalMoves();
 		Assert.assertNotNull(s);
@@ -77,7 +78,7 @@ public class MovesFinderTest {
 	}
 
 	private static void testBeating() {
-		Checker[][] board = createEmptyBoard();
+		CheckerModel[][] board = createEmptyBoard();
 		board[9][2].setKind(Sort.fullWhite);
 		board[8][3].setKind(Sort.fullBlack);
 		Set<List<MoveMessage>> s = new MovesFinder(board, Author.owner).getLegalMoves();
@@ -96,7 +97,7 @@ public class MovesFinderTest {
 	}
 
 	private static void testTwoBeatings() {
-		Checker[][] board = createEmptyBoard();
+		CheckerModel[][] board = createEmptyBoard();
 		board[9][2].setKind(Sort.fullWhite);
 		board[8][3].setKind(Sort.fullBlack);
 		board[8][1].setKind(Sort.fullBlack);

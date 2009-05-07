@@ -13,6 +13,7 @@ import draughts.MoveMessage;
 import draughts.NewConnection;
 import draughts.Player;
 import draughts.TextMessage;
+import draughts.moves.Mtd;
 
 
 /**
@@ -31,15 +32,33 @@ public class Frame extends javax.swing.JFrame {
     private Thread tmain;
     private boolean gameIsOn = false;
     private boolean yourTurn;
+    private boolean artificialGame=false;
+    private Mtd mtd=new Mtd();
+    private ITD itd;
+    private double[] weights;
+    
 
-    /**
+	/**
      * Tworzy główne okno gry.
      */
     public Frame() {
         initComponents();
         boardPanel1.setParentFrame(this);
+        fillWeights();
+        chooseTD();
     }
 
+    private void fillWeights()
+    {
+    	weights=new double[12];
+    	for(int i=0;i<12;i++)
+    		weights[i]=0;
+    }
+    
+    private void chooseTD(){
+    	itd=new TDSimple(weights,1,1);
+    }
+    
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -275,8 +294,8 @@ public class Frame extends javax.swing.JFrame {
         if ((myPlayer.getMAuthor() == Author.owner && o.getMAuthor() == Author.owner) || (myPlayer.getMAuthor() == Author.opponent && o.getMAuthor() == Author.opponent)) {
             sendObject(o);
         } else {
-            Checker first = o.getFirst();
-            Checker second = o.getSecond();
+            CheckerModel first = o.getFirst();
+            CheckerModel second = o.getSecond();
             boardPanel1.deleteIfBeaten(second, first);
             if (!gameIsOn) {
                 return;
@@ -289,6 +308,10 @@ public class Frame extends javax.swing.JFrame {
                 yourTurn = true;
                 chatArea.append("\nTwój ruch...");
                 chatArea.setCaretPosition(chatArea.getDocument().getLength());
+                if(artificialGame){
+                	System.out.println("o co chodzi");
+                	boardPanel1.makeMoves(mtd.getBestMoveDefault(boardPanel1.getCheckersArray(), myPlayer, itd));
+                }
             }
         }
     }
@@ -541,6 +564,14 @@ public class Frame extends javax.swing.JFrame {
     public void setYourTurn(boolean yourTurn) {
         this.yourTurn = yourTurn;
     }
+    
+    public boolean isArtificialGame() {
+		return artificialGame;
+	}
+
+	public void setArtificialGame(boolean artificialGame) {
+		this.artificialGame = artificialGame;
+	}
 }
 
 /**

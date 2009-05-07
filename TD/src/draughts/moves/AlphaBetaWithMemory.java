@@ -5,6 +5,7 @@ import java.util.Set;
 
 import draughts.Author;
 import draughts.FeatureCalculations;
+import draughts.ITD;
 import draughts.MoveMessage;
 import draughts.MovesFinder;
 import draughts.Player;
@@ -14,8 +15,8 @@ public class AlphaBetaWithMemory {
 
 	private LookupTable lookup = new LookupTable();
 
-	public int evaluate(Node node, int alpha, int beta, int depth, boolean myMove, Player me, TD td) {
-
+	public int evaluate(Node node, int alpha, int beta, int depth, boolean myMove, Player me, ITD td) {
+		System.out.println("evaluate");
 		Author opponent = Author.owner.equals(me.getMAuthor()) ? Author.opponent : Author.owner;
 
 		LookupTable.Data data = lookup.lookup(node, depth);
@@ -40,7 +41,7 @@ public class AlphaBetaWithMemory {
 		boolean isTerminal = legalMoves.isEmpty();
 		if (isTerminal || depth == 0) {
 			FeatureCalculations featuresCalculator = new FeatureCalculations(node.getBoard(), me);
-			td.calculateEvaluationFunction(featuresCalculator.getEvaluationFunctionFeatures());
+			return (int) td.calculateEvaluationFunction(featuresCalculator.getEvaluationFunctionFeatures());
 		} else if (myMove) {
 			g = Integer.MIN_VALUE;
 			int a = alpha;
@@ -51,7 +52,8 @@ public class AlphaBetaWithMemory {
 					break;
 				}
 				Node newNode = new Node(BoardUtils.performMoves(node.getBoard(), list));
-				int newDepth = BoardUtils.isBeating(list) ? depth : depth - 1;
+//				int newDepth = BoardUtils.isBeating(list) ? depth : depth - 1;
+				int newDepth = depth - 1;
 				g = Math.max(g, evaluate(newNode, a, beta, newDepth, !myMove, me, td));
 				a = Math.max(a, g);
 			}
@@ -66,7 +68,8 @@ public class AlphaBetaWithMemory {
 					break;
 				}
 				Node newNode = new Node(BoardUtils.performMoves(node.getBoard(), list));
-				int newDepth = BoardUtils.isBeating(list) ? depth : depth - 1;
+//				int newDepth = BoardUtils.isBeating(list) ? depth : depth - 1;
+				int newDepth = depth - 1;
 				g = Math.min(g, evaluate(newNode, alpha, b, newDepth, !myMove, me, td));
 				b = Math.min(b, g);
 			}

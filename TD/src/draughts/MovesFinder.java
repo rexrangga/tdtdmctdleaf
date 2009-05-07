@@ -12,21 +12,23 @@ import draughts.moves.BoardUtils;
 public class MovesFinder {
 
 	private static final int BOARD_SIZE = 10;
-	private final Checker[][] m_board;
+	private final CheckerModel[][] m_board;
 	private final Author author;
 
 	/**
-	 * Creates a new instance of MovesFinder which will return possible moves for specified player in specified board
-	 * position.
+	 * Creates a new instance of MovesFinder which will return possible moves
+	 * for specified player in specified board position.
 	 * 
 	 * @param board
-	 *            checkers positions. This class makes a copy of constructors argument so <code>board</code> will not be
-	 *            modified by it and can be kept by the caller
+	 *            checkers positions. This class makes a copy of constructors
+	 *            argument so <code>board</code> will not be modified by it and
+	 *            can be kept by the caller
 	 * @param author
-	 *            author equal to <code>Author.owner</code> means that current player is playing white, otherwise
-	 *            current player is playing black
+	 *            author equal to <code>Author.owner</code> means that current
+	 *            player is playing white, otherwise current player is playing
+	 *            black
 	 */
-	public MovesFinder(Checker[][] board, Author author) {
+	public MovesFinder(CheckerModel[][] board, Author author) {
 		if (board == null || author == null) {
 			throw new IllegalArgumentException();
 		}
@@ -35,15 +37,20 @@ public class MovesFinder {
 	}
 
 	/**
-	 * Returns set of possible moves in given board situation. Each element of the set describes one sequence of moves.
-	 * A sequence may consist of one or more single moves. A sequence consists of more than one move if and only if each
-	 * of its moves is a beating. This method implements the following checkers rules:
+	 * Returns set of possible moves in given board situation. Each element of
+	 * the set describes one sequence of moves. A sequence may consist of one or
+	 * more single moves. A sequence consists of more than one move if and only
+	 * if each of its moves is a beating. This method implements the following
+	 * checkers rules:
 	 * <ul>
 	 * <li>beatings are obligatory
-	 * <li>if there is more than one sequence of beatings, sequence with most beatings must be chosen
-	 * <li>if several sequences of beating are tied for most number of beatings, any of them may be chosen
+	 * <li>if there is more than one sequence of beatings, sequence with most
+	 * beatings must be chosen
+	 * <li>if several sequences of beating are tied for most number of beatings,
+	 * any of them may be chosen
 	 * </ul>
-	 * If there are no legal moves for a player in given position, this method returns an empty set.
+	 * If there are no legal moves for a player in given position, this method
+	 * returns an empty set.
 	 * 
 	 * @return
 	 */
@@ -61,6 +68,7 @@ public class MovesFinder {
 
 	public Set<List<MoveMessage>> getMoves(boolean lookForNonBeatings, boolean lookForBeatings,
 			UpdateResultSetStrategy strategy) {
+		System.out.println("getMoves");
 		Sort myRegular = Author.owner.equals(author) ? Sort.fullWhite : Sort.fullBlack;
 		Sort myQueen = Author.owner.equals(author) ? Sort.queenWhite : Sort.queenBlack;
 		EnumSet<Sort> mySorts = EnumSet.of(myQueen, myRegular);
@@ -71,15 +79,16 @@ public class MovesFinder {
 
 		for (int i = 0; i < BOARD_SIZE; i++) {
 			for (int j = 0; j < BOARD_SIZE; j++) {
-				Checker currChecker = m_board[i][j];
+				CheckerModel currChecker = m_board[i][j];
 				if (mySorts.contains(currChecker.getKind())) {
-					Checker[][] board = BoardUtils.makeCopy(m_board);
-					List<Checker> beatings = lookForBeatings ? checkBeating(currChecker, board) : null;
+					CheckerModel[][] board = BoardUtils.makeCopy(m_board);
+					List<CheckerModel> beatings = lookForBeatings ? checkBeating(currChecker, board) : null;
+					System.out.println("!!! " + (beatings != null? beatings.size() : 0));
 					if ((beatings == null || beatings.isEmpty()) && !foundBeating && lookForNonBeatings) {
-						List<Checker> nonBeatings = checkFree(currChecker, board);
-						for (Checker nonBeating : nonBeatings) {
-							MoveMessage mm = new MoveMessage(new Checker(currChecker), new Checker(nonBeating), author,
-									true);
+						List<CheckerModel> nonBeatings = checkFree(currChecker, board);
+						for (CheckerModel nonBeating : nonBeatings) {
+							MoveMessage mm = new MoveMessage(new CheckerModel(currChecker), new CheckerModel(
+									nonBeating), author, true);
 							List<MoveMessage> newResult = new ArrayList<MoveMessage>(1);
 							newResult.add(mm);
 							maxLength = strategy.updateResult(result, maxLength, newResult);
@@ -89,10 +98,10 @@ public class MovesFinder {
 							foundBeating = true;
 							result.clear();
 						}
-						for (Checker beating : beatings) {
-							MoveMessage mm = new MoveMessage(new Checker(currChecker), new Checker(beating), author,
-									false);
-							Checker[][] copy = BoardUtils.performMoves(board, Arrays.asList(mm));
+						for (CheckerModel beating : beatings) {
+							MoveMessage mm = new MoveMessage(new CheckerModel(currChecker), new CheckerModel(
+									beating), author, false);
+							CheckerModel[][] copy = BoardUtils.performMoves(board, Arrays.asList(mm));
 							MovesFinder helper = new MovesFinder(copy, author);
 							Set<List<MoveMessage>> helpResult = helper.getMoves(false, true, strategy);
 							if (helpResult == null || helpResult.isEmpty()) {
@@ -103,8 +112,9 @@ public class MovesFinder {
 							} else {
 								for (List<MoveMessage> list : helpResult) {
 									List<MoveMessage> newResult = new ArrayList<MoveMessage>(list.size() + 1);
-									MoveMessage newMessage = new MoveMessage(new Checker(mm.getFirst()), new Checker(
-											mm.getSecond()), mm.getMAuthor(), mm.isEndsTurn());
+									MoveMessage newMessage = new MoveMessage(new CheckerModel(mm.getFirst()),
+											new CheckerModel(mm.getSecond()), mm.getMAuthor(), mm
+													.isEndsTurn());
 									newResult.add(newMessage);
 									newResult.addAll(list);
 									maxLength = strategy.updateResult(result, maxLength, newResult);
@@ -157,8 +167,8 @@ public class MovesFinder {
 	// return result;
 	// }
 
-	private ArrayList<Checker> checkBeating(Checker jb, Checker[][] board) {
-		ArrayList<Checker> beatingMoves = new ArrayList<Checker>();
+	private ArrayList<CheckerModel> checkBeating(CheckerModel jb, CheckerModel[][] board) {
+		ArrayList<CheckerModel> beatingMoves = new ArrayList<CheckerModel>();
 		int i = jb.getI();
 		int j = jb.getJ();
 		Sort opponent1, opponent2, supporter1, supporter2;
@@ -298,14 +308,15 @@ public class MovesFinder {
 	}
 
 	/**
-	 * Returns a list of board fields on which specified checker can move without beating opponents checker.
+	 * Returns a list of board fields on which specified checker can move
+	 * without beating opponents checker.
 	 * 
 	 * @param jb
 	 * @return
 	 */
-	private List<Checker> checkFree(Checker jb, Checker[][] board) {
+	private List<CheckerModel> checkFree(CheckerModel jb, CheckerModel[][] board) {
 
-		List<Checker> freeMoves = new ArrayList<Checker>();
+		List<CheckerModel> freeMoves = new ArrayList<CheckerModel>();
 		// freeMoves.clear();
 		int i = jb.getI();
 		int j = jb.getJ();

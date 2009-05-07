@@ -8,6 +8,10 @@ import javax.swing.UIManager;
 /**
  * Główna klasa aplikacji, która uruchamia okno gry.
  */
+/**
+ * @author Kamil
+ *
+ */
 public class Main {
 
     /**
