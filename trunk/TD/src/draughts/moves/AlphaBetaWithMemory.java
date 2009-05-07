@@ -9,7 +9,6 @@ import draughts.ITD;
 import draughts.MoveMessage;
 import draughts.MovesFinder;
 import draughts.Player;
-import draughts.TD;
 
 public class AlphaBetaWithMemory {
 
@@ -52,7 +51,7 @@ public class AlphaBetaWithMemory {
 					break;
 				}
 				Node newNode = new Node(BoardUtils.performMoves(node.getBoard(), list));
-//				int newDepth = BoardUtils.isBeating(list) ? depth : depth - 1;
+				// int newDepth = BoardUtils.isBeating(list) ? depth : depth - 1;
 				int newDepth = depth - 1;
 				g = Math.max(g, evaluate(newNode, a, beta, newDepth, !myMove, me, td));
 				a = Math.max(a, g);
@@ -68,7 +67,7 @@ public class AlphaBetaWithMemory {
 					break;
 				}
 				Node newNode = new Node(BoardUtils.performMoves(node.getBoard(), list));
-//				int newDepth = BoardUtils.isBeating(list) ? depth : depth - 1;
+				// int newDepth = BoardUtils.isBeating(list) ? depth : depth - 1;
 				int newDepth = depth - 1;
 				g = Math.min(g, evaluate(newNode, alpha, b, newDepth, !myMove, me, td));
 				b = Math.min(b, g);

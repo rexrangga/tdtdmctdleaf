@@ -16,17 +16,15 @@ public class MovesFinder {
 	private final Author author;
 
 	/**
-	 * Creates a new instance of MovesFinder which will return possible moves
-	 * for specified player in specified board position.
+	 * Creates a new instance of MovesFinder which will return possible moves for specified player in specified board
+	 * position.
 	 * 
 	 * @param board
-	 *            checkers positions. This class makes a copy of constructors
-	 *            argument so <code>board</code> will not be modified by it and
-	 *            can be kept by the caller
+	 *            checkers positions. This class makes a copy of constructors argument so <code>board</code> will not be
+	 *            modified by it and can be kept by the caller
 	 * @param author
-	 *            author equal to <code>Author.owner</code> means that current
-	 *            player is playing white, otherwise current player is playing
-	 *            black
+	 *            author equal to <code>Author.owner</code> means that current player is playing white, otherwise
+	 *            current player is playing black
 	 */
 	public MovesFinder(CheckerModel[][] board, Author author) {
 		if (board == null || author == null) {
@@ -37,20 +35,15 @@ public class MovesFinder {
 	}
 
 	/**
-	 * Returns set of possible moves in given board situation. Each element of
-	 * the set describes one sequence of moves. A sequence may consist of one or
-	 * more single moves. A sequence consists of more than one move if and only
-	 * if each of its moves is a beating. This method implements the following
-	 * checkers rules:
+	 * Returns set of possible moves in given board situation. Each element of the set describes one sequence of moves.
+	 * A sequence may consist of one or more single moves. A sequence consists of more than one move if and only if each
+	 * of its moves is a beating. This method implements the following checkers rules:
 	 * <ul>
 	 * <li>beatings are obligatory
-	 * <li>if there is more than one sequence of beatings, sequence with most
-	 * beatings must be chosen
-	 * <li>if several sequences of beating are tied for most number of beatings,
-	 * any of them may be chosen
+	 * <li>if there is more than one sequence of beatings, sequence with most beatings must be chosen
+	 * <li>if several sequences of beating are tied for most number of beatings, any of them may be chosen
 	 * </ul>
-	 * If there are no legal moves for a player in given position, this method
-	 * returns an empty set.
+	 * If there are no legal moves for a player in given position, this method returns an empty set.
 	 * 
 	 * @return
 	 */
@@ -83,24 +76,24 @@ public class MovesFinder {
 				if (mySorts.contains(currChecker.getKind())) {
 					CheckerModel[][] board = BoardUtils.makeCopy(m_board);
 					List<CheckerModel> beatings = lookForBeatings ? checkBeating(currChecker, board) : null;
-					System.out.println("!!! " + (beatings != null? beatings.size() : 0));
+					System.out.println("!!! " + (beatings != null ? beatings.size() : 0));
 					if ((beatings == null || beatings.isEmpty()) && !foundBeating && lookForNonBeatings) {
 						List<CheckerModel> nonBeatings = checkFree(currChecker, board);
 						for (CheckerModel nonBeating : nonBeatings) {
-							MoveMessage mm = new MoveMessage(new CheckerModel(currChecker), new CheckerModel(
-									nonBeating), author, true);
+							MoveMessage mm = new MoveMessage(new CheckerModel(currChecker),
+									new CheckerModel(nonBeating), author, true);
 							List<MoveMessage> newResult = new ArrayList<MoveMessage>(1);
 							newResult.add(mm);
 							maxLength = strategy.updateResult(result, maxLength, newResult);
 						}
-					} else {
+					} else if (beatings != null && !beatings.isEmpty()) {
 						if (!foundBeating) {
 							foundBeating = true;
 							result.clear();
 						}
 						for (CheckerModel beating : beatings) {
-							MoveMessage mm = new MoveMessage(new CheckerModel(currChecker), new CheckerModel(
-									beating), author, false);
+							MoveMessage mm = new MoveMessage(new CheckerModel(currChecker), new CheckerModel(beating),
+									author, false);
 							CheckerModel[][] copy = BoardUtils.performMoves(board, Arrays.asList(mm));
 							MovesFinder helper = new MovesFinder(copy, author);
 							Set<List<MoveMessage>> helpResult = helper.getMoves(false, true, strategy);
@@ -113,8 +106,7 @@ public class MovesFinder {
 								for (List<MoveMessage> list : helpResult) {
 									List<MoveMessage> newResult = new ArrayList<MoveMessage>(list.size() + 1);
 									MoveMessage newMessage = new MoveMessage(new CheckerModel(mm.getFirst()),
-											new CheckerModel(mm.getSecond()), mm.getMAuthor(), mm
-													.isEndsTurn());
+											new CheckerModel(mm.getSecond()), mm.getMAuthor(), mm.isEndsTurn());
 									newResult.add(newMessage);
 									newResult.addAll(list);
 									maxLength = strategy.updateResult(result, maxLength, newResult);
@@ -308,8 +300,7 @@ public class MovesFinder {
 	}
 
 	/**
-	 * Returns a list of board fields on which specified checker can move
-	 * without beating opponents checker.
+	 * Returns a list of board fields on which specified checker can move without beating opponents checker.
 	 * 
 	 * @param jb
 	 * @return
