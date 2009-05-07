@@ -6,9 +6,16 @@ import java.util.Map;
 public class LookupTable {
 
 	private Map<Key, Data> lookupTable = new HashMap<Key, Data>();
+	private int cacheHit = 0, cacheMiss = 0;
 
 	public Data lookup(Node node, int depth) {
-		return lookupTable.get(new Key(node, depth));
+		Data d = lookupTable.get(new Key(node, depth));
+		if (d != null) {
+			cacheHit++;
+		} else {
+			cacheMiss++;
+		}
+		return d;
 	}
 
 	public void storeUpper(Node node, int depth, int upper) {
@@ -66,7 +73,7 @@ class Key {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + depth;
+		// result = prime * result + depth;
 		result = prime * result + ((node == null) ? 0 : node.hashCode());
 		return result;
 	}
@@ -80,8 +87,8 @@ class Key {
 		if (getClass() != obj.getClass())
 			return false;
 		Key other = (Key) obj;
-		if (depth != other.depth)
-			return false;
+		// if (depth != other.depth)
+		// return false;
 		if (node == null) {
 			if (other.node != null)
 				return false;

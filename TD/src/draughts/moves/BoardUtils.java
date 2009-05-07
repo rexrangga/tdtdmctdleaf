@@ -34,35 +34,35 @@ public class BoardUtils {
 		}
 		return result;
 	}
-	
+
 	public static CheckerModel[][] performMoves(CheckerModel[][] board, List<MoveMessage> moves) {
 		CheckerModel[][] result = makeCopy(board);
 		for (MoveMessage mm : moves) {
 			int dx = Math.abs(mm.getFirst().getI() - mm.getSecond().getI());
 			int dy = Math.abs(mm.getFirst().getJ() - mm.getSecond().getJ());
+			int directionX = (mm.getSecond().getI() - mm.getFirst().getI()) / dx;
+			int directionY = (mm.getSecond().getJ() - mm.getFirst().getJ()) / dy;
 			if (dx == dy && dx > 1) {
 				for (int i = 1; i < dx; i++) {
-					int directionX = (mm.getFirst().getI() - mm.getSecond().getI()) / dx;
-					int directionY = (mm.getFirst().getJ() - mm.getSecond().getJ()) / dy;
 					int iIdx = mm.getFirst().getI() + directionX * i;
 					int jIdx = mm.getFirst().getJ() + directionY * i;
-					board[iIdx][jIdx].setKind(Sort.blankBlack);
+					result[iIdx][jIdx].setKind(Sort.blankBlack);
 				}
-				board[mm.getFirst().getI()][mm.getFirst().getJ()].setKind(Sort.blankBlack);
-				board[mm.getSecond().getI()][mm.getSecond().getJ()].setKind(mm.getFirst().getKind());
+				result[mm.getFirst().getI()][mm.getFirst().getJ()].setKind(Sort.blankBlack);
+				result[mm.getSecond().getI()][mm.getSecond().getJ()].setKind(mm.getFirst().getKind());
 			} else if (dx == 1 && dy == 1) {
-				board[mm.getFirst().getI()][mm.getFirst().getJ()].setKind(Sort.blankBlack);
-				board[mm.getSecond().getI()][mm.getSecond().getJ()].setKind(mm.getFirst().getKind());
+				result[mm.getFirst().getI()][mm.getFirst().getJ()].setKind(Sort.blankBlack);
+				result[mm.getSecond().getI()][mm.getSecond().getJ()].setKind(mm.getFirst().getKind());
 			} else {
 				throw new RuntimeException("first [i = " + mm.getFirst().getI() + ", j = " + mm.getFirst().getJ()
 						+ "] second [i = " + mm.getSecond().getI() + ", j = " + mm.getSecond().getJ() + "]");
 			}
 			if (mm.isEndsTurn()) {
 				if (mm.getFirst().getKind().equals(Sort.fullWhite) && mm.getSecond().getI() == 0) {
-					board[mm.getSecond().getI()][mm.getSecond().getJ()].setKind(Sort.queenWhite);
+					result[mm.getSecond().getI()][mm.getSecond().getJ()].setKind(Sort.queenWhite);
 				}
 				if (mm.getFirst().getKind().equals(Sort.fullBlack) && mm.getSecond().getI() == 9) {
-					board[mm.getSecond().getI()][mm.getSecond().getJ()].setKind(Sort.queenBlack);
+					result[mm.getSecond().getI()][mm.getSecond().getJ()].setKind(Sort.queenBlack);
 				}
 			}
 		}

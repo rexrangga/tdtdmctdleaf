@@ -2,7 +2,6 @@ package draughts.moves;
 
 import java.util.Arrays;
 
-import draughts.Checker;
 import draughts.CheckerModel;
 
 public class Node {
@@ -21,7 +20,9 @@ public class Node {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + Arrays.hashCode(board);
+		for (CheckerModel[] arr : board) {
+			result = prime * result + Arrays.hashCode(arr);
+		}
 		return result;
 	}
 

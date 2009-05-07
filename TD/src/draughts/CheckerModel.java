@@ -21,7 +21,7 @@ public class CheckerModel implements Serializable {
 		this.j = checkerModel.getJ();
 		this.kind = checkerModel.getKind();
 	}
-	
+
 	public CheckerModel(CheckerModel checkerModel) {
 		// TODO Auto-generated constructor stub
 		this.i = checkerModel.getI();

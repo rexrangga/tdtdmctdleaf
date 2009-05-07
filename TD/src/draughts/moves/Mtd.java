@@ -12,10 +12,13 @@ import draughts.Player;
 
 public class Mtd {
 
-	private static final int F=0;
-	private static final int MAX_DEPTH=5;
-	
+	private static final int F = 0;
+	private static final int MAX_DEPTH = 5;
+
 	private AlphaBetaWithMemory alphaBetaWithMemory = new AlphaBetaWithMemory();
+
+	public Mtd() {
+	}
 
 	public List<MoveMessage> getBestMove(Checker[][] bboard, int f, int maxDepth, Player me, ITD td) {
 		CheckerModel[][] board = BoardUtils.fromChecker(bboard);
@@ -33,9 +36,9 @@ public class Mtd {
 		}
 		return bestMove;
 	}
-	
-	public List<MoveMessage> getBestMoveDefault(Checker[][] board, Player me, ITD td){
-		return getBestMove(board, F, MAX_DEPTH, me, td );
+
+	public List<MoveMessage> getBestMoveDefault(Checker[][] board, Player me, ITD td) {
+		return getBestMove(board, F, MAX_DEPTH, me, td);
 	}
 
 	private int evaluate(CheckerModel[][] board, int f, int maxDepth, Player me, ITD td) {
