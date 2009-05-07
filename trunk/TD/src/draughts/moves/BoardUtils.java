@@ -3,6 +3,7 @@ package draughts.moves;
 import java.util.List;
 
 import draughts.Checker;
+import draughts.CheckerModel;
 import draughts.MoveMessage;
 import draughts.Sort;
 
@@ -10,20 +11,32 @@ public class BoardUtils {
 
 	public static final int BOARD_SIZE = 10;
 
-	public static Checker[][] makeCopy(Checker[][] board) {
-		Checker[][] result = new Checker[BOARD_SIZE][];
+	public static CheckerModel[][] makeCopy(CheckerModel[][] board) {
+		CheckerModel[][] result = new CheckerModel[BOARD_SIZE][];
 		for (int i = 0; i < BOARD_SIZE; i++) {
-			Checker[] temp = new Checker[BOARD_SIZE];
+			CheckerModel[] temp = new CheckerModel[BOARD_SIZE];
 			for (int j = 0; j < BOARD_SIZE; j++) {
-				temp[j] = new Checker(board[i][j]);
+				temp[j] = new CheckerModel(board[i][j]);
 			}
 			result[i] = temp;
 		}
 		return result;
 	}
 
-	public static Checker[][] performMoves(Checker[][] board, List<MoveMessage> moves) {
-		Checker[][] result = makeCopy(board);
+	public static CheckerModel[][] fromChecker(Checker[][] board) {
+		CheckerModel[][] result = new CheckerModel[BOARD_SIZE][];
+		for (int i = 0; i < BOARD_SIZE; i++) {
+			CheckerModel[] temp = new CheckerModel[BOARD_SIZE];
+			for (int j = 0; j < BOARD_SIZE; j++) {
+				temp[j] = new CheckerModel(board[i][j].getI(), board[i][j].getJ(), board[i][j].getKind());
+			}
+			result[i] = temp;
+		}
+		return result;
+	}
+	
+	public static CheckerModel[][] performMoves(CheckerModel[][] board, List<MoveMessage> moves) {
+		CheckerModel[][] result = makeCopy(board);
 		for (MoveMessage mm : moves) {
 			int dx = Math.abs(mm.getFirst().getI() - mm.getSecond().getI());
 			int dy = Math.abs(mm.getFirst().getJ() - mm.getSecond().getJ());

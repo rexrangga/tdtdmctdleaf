@@ -90,6 +90,8 @@ public class NewConnection extends javax.swing.JFrame {
     private void newConnectionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newConnectionButtonActionPerformed
         try {
             parentFrame.setServerSocket(new ServerSocket(Integer.parseInt(portField.getText())));
+            if(playerNameField.getText().indexOf("bot")>-1)
+            	parentFrame.setArtificialGame(true);
             parentFrame.setMyPlayer(new Player(playerNameField.getText(), Author.owner));
             parentFrame.getChatArea().append("<" + playerNameField.getText() + "> " + "Połączony...");
             parentFrame.getChatArea().append("\nOczekiwanie na drugiego gracza...");

@@ -6,7 +6,7 @@ import java.util.Set;
 
 public class FeatureCalculations {
 
-	private Checker[][] checkersArray;
+	private CheckerModel[][] checkersArray;
 	private Player player;
 
 	private Set<List<MoveMessage>> myBeatableMoves;
@@ -14,7 +14,7 @@ public class FeatureCalculations {
 	private Set<List<MoveMessage>> myNonBeatableMoves;
 	private Set<List<MoveMessage>> oppNonBeatableMoves;
 	
-	public FeatureCalculations(Checker[][] checkersArray, Player player){
+	public FeatureCalculations(CheckerModel[][] checkersArray, Player player){
 		this.player=player;
 		this.checkersArray=checkersArray;
 		
@@ -23,7 +23,7 @@ public class FeatureCalculations {
 		this.myNonBeatableMoves=myMovesFinder.getAllNonBeatings();
 		MovesFinder oppMovesFinder=new MovesFinder(checkersArray,player.getMAuthor()==Author.owner?Author.opponent:Author.owner);
 		this.oppBeatableMoves=oppMovesFinder.getAllBeatings();
-		this.oppBeatableMoves=oppMovesFinder.getAllNonBeatings();
+		this.oppNonBeatableMoves=oppMovesFinder.getAllNonBeatings();
 	}
 	
 	public int getMyPossibleMovesCount(){
@@ -64,7 +64,7 @@ public class FeatureCalculations {
 		
 		while(it.hasNext()){
 			List<MoveMessage> cur=it.next();
-			Checker lastChecker=cur.get(cur.size()).getSecond();
+			CheckerModel lastChecker=cur.get(cur.size()-1).getSecond();
 			if(lastChecker.getI()==queensRow)
 				queensCount++;
 		}
@@ -87,7 +87,7 @@ public class FeatureCalculations {
 			{
 				if(checkersArray[i][j].getKind()==Sort.fullBlack)
 				{
-					features[iAmWhite-1]++;
+					features[iAmWhite]++;
 				}
 				else if(checkersArray[i][j].getKind()==Sort.fullWhite)
 				{

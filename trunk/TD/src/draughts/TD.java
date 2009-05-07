@@ -3,7 +3,7 @@ package draughts;
 /*
  * Interface used by every TD implementation
  */
-public abstract class TD {
+public abstract class TD implements ITD{
 
 	protected double[] weights = null;
 	private double a = 0;

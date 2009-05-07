@@ -9,6 +9,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.List;
+
 import javax.swing.BorderFactory;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -102,7 +104,7 @@ public class BoardPanel extends JPanel {
      * @param first Pole, z którego ruszył się gracz.
      * @param second Pole, na które przesunął się gracz.
      */
-    public void deleteIfBeaten(Checker first, Checker second) {
+    public void deleteIfBeaten(CheckerModel first, CheckerModel second) {
         int iMax = Math.max(first.getI(), second.getI());
         int jMax = Math.max(first.getJ(), second.getJ());
         int jMin = Math.min(first.getJ(), second.getJ());
@@ -429,7 +431,7 @@ public class BoardPanel extends JPanel {
          * @see BoardPanel#deleteIfBeaten(Checker first, Checker second)
          */
         public void actionPerformed(ActionEvent e) {
-            if (parentFrame.isGameIsOn() && parentFrame.isYourTurn()) {
+            if (parentFrame.isGameIsOn() && parentFrame.isYourTurn() && !parentFrame.isArtificialGame()) {
                 Sort yourKind1, yourKind2;
                 Checker jb = (Checker) e.getSource();
                 if (chosen == false) {
@@ -463,11 +465,11 @@ public class BoardPanel extends JPanel {
                     jb.setKind(chosenLast.getKind());
                     chosenLast.setKind(Sort.blankBlack);
                     setCheckerIcon(chosenLast, Sort.blankBlack);
-                    deleteIfBeaten(chosenLast, jb);
+                    deleteIfBeaten(new CheckerModel(chosenLast), new CheckerModel(jb));
                     chosenLast.setBorder(null);
 
                     if (toBeatList.contains(jb) && (toBeatList = checkBeating(jb)).size() > 0) {
-                        parentFrame.sendMoveMessage(new MoveMessage(new Checker(jb), new Checker(chosenLast), parentFrame.getMyPlayer().getMAuthor(), false));
+                        parentFrame.sendMoveMessage(new MoveMessage(new CheckerModel(jb), new CheckerModel(chosenLast), parentFrame.getMyPlayer().getMAuthor(), false));
                         parentFrame.setYourTurn(true);
                         chosen = true;
                         jb.setBorder(BorderFactory.createLineBorder(Color.WHITE, 2));
@@ -481,7 +483,7 @@ public class BoardPanel extends JPanel {
                             jb.setKind(Sort.queenBlack);
                             setCheckerIcon(jb, Sort.queenBlack);
                         }
-                        parentFrame.sendMoveMessage(new MoveMessage(new Checker(jb), new Checker(chosenLast), parentFrame.getMyPlayer().getMAuthor(), true));
+                        parentFrame.sendMoveMessage(new MoveMessage(new CheckerModel(jb), new CheckerModel(chosenLast), parentFrame.getMyPlayer().getMAuthor(), true));
                         parentFrame.setYourTurn(false);
                         if (!parentFrame.isGameIsOn()) {
                             return;
@@ -493,6 +495,33 @@ public class BoardPanel extends JPanel {
                 }
             }
         }
+    }
+    
+    public void makeMoves(List<MoveMessage> moves){
+    	System.out.println("moves size: "+ moves.size());
+    	for(int i=0;i<moves.size();i++){
+    		CheckerModel first=moves.get(i).getFirst();
+    		CheckerModel second=moves.get(i).getSecond();
+    		
+    		setCheckerIcon(checkersArray[second.getI()][second.getJ()], first.getKind());
+    		checkersArray[second.getI()][second.getJ()].setKind(first.getKind());
+            checkersArray[first.getI()][first.getJ()].setKind(Sort.blankBlack);
+            setCheckerIcon(checkersArray[first.getI()][first.getJ()], Sort.blankBlack);
+            deleteIfBeaten(new CheckerModel(checkersArray[first.getI()][first.getJ()]),new CheckerModel(checkersArray[second.getI()][second.getJ()] ));
+            if(i==moves.size()-1){
+            	parentFrame.sendMoveMessage(new MoveMessage(new CheckerModel(checkersArray[second.getI()][second.getJ()]), new CheckerModel(checkersArray[first.getI()][first.getJ()]), parentFrame.getMyPlayer().getMAuthor(), false));
+                parentFrame.setYourTurn(true);
+            }
+            else
+            {//daaaamki
+            	parentFrame.sendMoveMessage(new MoveMessage(new CheckerModel(checkersArray[second.getI()][second.getJ()]), new CheckerModel(checkersArray[first.getI()][first.getJ()]), parentFrame.getMyPlayer().getMAuthor(), true));
+            	parentFrame.setYourTurn(false);
+            	 if (!parentFrame.isGameIsOn()) {
+                     return;
+                 }
+            	parentFrame.getChatArea().append("\nRuch przeciwnika...");
+            }
+    	}
     }
 
     /**

@@ -28,6 +28,7 @@ public class Connection extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         portField = new javax.swing.JTextField();
+        portField.setText("8189");
         jLabel3 = new javax.swing.JLabel();
         playerNameField = new javax.swing.JTextField();
         connectionButton = new javax.swing.JButton();
@@ -107,6 +108,8 @@ public class Connection extends javax.swing.JFrame {
             }
             parentFrame.setSocket(new Socket(hostField.getText(), Integer.parseInt(portField.getText())));
             parentFrame.getSocket().setSoTimeout(5000);
+            if(playerNameField.getText().indexOf("bot")>-1)
+            	parentFrame.setArtificialGame(true);
             parentFrame.setMyPlayer(new Player(playerNameField.getText(), Author.opponent));
             parentFrame.getChatArea().append("<" + playerNameField.getText() + "> " + "Połączony...");
             parentFrame.begin();

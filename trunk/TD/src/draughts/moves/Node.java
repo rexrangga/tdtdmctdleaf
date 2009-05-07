@@ -3,16 +3,17 @@ package draughts.moves;
 import java.util.Arrays;
 
 import draughts.Checker;
+import draughts.CheckerModel;
 
 public class Node {
 
-	private final Checker[][] board;
+	private final CheckerModel[][] board;
 
-	public Node(Checker[][] board) {
+	public Node(CheckerModel[][] board) {
 		this.board = BoardUtils.makeCopy(board);
 	}
 
-	public Checker[][] getBoard() {
+	public CheckerModel[][] getBoard() {
 		return board;
 	}
 
