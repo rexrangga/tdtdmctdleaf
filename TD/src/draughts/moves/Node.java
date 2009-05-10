@@ -35,8 +35,11 @@ public class Node {
 		if (getClass() != obj.getClass())
 			return false;
 		Node other = (Node) obj;
-		if (!Arrays.equals(board, other.board))
-			return false;
+		for (int i = 0; i < 10; i++) {
+			if (!Arrays.equals(board[i], other.board[i])) {
+				return false;
+			}
+		}
 		return true;
 	}
 }
