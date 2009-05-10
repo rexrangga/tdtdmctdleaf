@@ -53,6 +53,9 @@ public class AlphaBetaWithMemory {
 				Node newNode = new Node(BoardUtils.performMoves(node.getBoard(), list));
 				// int newDepth = BoardUtils.isBeating(list) ? depth : depth - 1;
 				int newDepth = depth - 1;
+				if (newDepth == 0 && BoardUtils.isBeating(list)) {
+					newDepth = 1;
+				}
 				g = Math.max(g, evaluate(newNode, a, beta, newDepth, !myMove, me, td));
 				a = Math.max(a, g);
 			}
@@ -69,6 +72,9 @@ public class AlphaBetaWithMemory {
 				Node newNode = new Node(BoardUtils.performMoves(node.getBoard(), list));
 				// int newDepth = BoardUtils.isBeating(list) ? depth : depth - 1;
 				int newDepth = depth - 1;
+				if (newDepth == 0 && BoardUtils.isBeating(list)) {
+					newDepth = 1;
+				}
 				g = Math.min(g, evaluate(newNode, alpha, b, newDepth, !myMove, me, td));
 				b = Math.min(b, g);
 			}
