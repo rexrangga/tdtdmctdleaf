@@ -1,5 +1,6 @@
 package draughts;
 
+
 /*
  * Interface used by every TD implementation
  */

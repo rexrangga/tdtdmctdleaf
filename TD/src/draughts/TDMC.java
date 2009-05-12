@@ -9,6 +9,7 @@ public class TDMC extends TD {
 	double gammaDiscountRate = 0.5;
 	double lambdaEligibilityRate = 0.5;
 	double alfaLearningRate = 0.2;
+	int simNumber = 5000;
 
 	public TDMC(double[] weights, double gammaDiscountRate,
 			double lambdaEligibilityRate, double alfaLearningRate, double a,
@@ -21,11 +22,12 @@ public class TDMC extends TD {
 
 	public void updateWeights(GameData gameData) {
 		// first step of the algorithm - calculate evaluationFunctionValues
-		double[] evaluationFunctionValues = calculateEverEvaluationFunctionValue(gameData.evaluationFunctionFeatures);
+		double[] evaluationFunctionValues = calculateEvaluationFunctionValue(gameData.evaluationFunctionFeatures);
 		// calculate evaluation function gradient
 		// first dimension - time moment, second dimension - weight derrivates
 		double[][] evaulationFunctionGradient = computeEvaluationFunctionGradient(gameData.evaluationFunctionFeatures);
-		double[] rewards = calculateWinningProbabilities(gameData);
+		double[] rewards = calculateMonteCarloWinningProbabilities(gameData,
+				simNumber);
 		double[] Rt = computeReturn(rewards);
 		double[][] RTNStep = computeNStepReturn(rewards,
 				evaluationFunctionValues);
@@ -33,24 +35,6 @@ public class TDMC extends TD {
 
 		updateWeights(RTLambda, evaulationFunctionGradient,
 				evaluationFunctionValues);
-	}
-
-	private double[] calculateWinningProbabilities(GameData gameData) {
-		// TODO napisaæ kod symulacji MonteCarlo
-
-		return null;
-	}
-
-	/**
-	 * Calculates evaluation function values for every time moment
-	 */
-	private double[] calculateEverEvaluationFunctionValue(
-			List<double[]> features) {
-		double[] functionValues = new double[features.size()];
-		for (int i = 0; i < features.size(); i++) {
-			functionValues[i] = calculateEvaluationFunction(features.get(i));
-		}
-		return functionValues;
 	}
 
 	/**
@@ -100,16 +84,15 @@ public class TDMC extends TD {
 			// for t, t+1, t+2 .... t+n - build and fill table for different
 			// values of n = (t;T)
 			Rn[i] = new double[rewards.length - i];
-			for (int j = i; j < Rn[i].length + i; j++) {
+			for (int j = 0; j < Rn[i].length; j++) {
 				double value = 0.0;
 				// for given value of n calculate sum
-				for (int k = i; k < j; k++) {
-					value += Math.pow(lambdaEligibilityRate, k - i)
-							* rewards[k];
+				for (int k = 0; k < j - 1; k++) {
+					value += Math.pow(lambdaEligibilityRate, k) * rewards[k];
 				}
 				value += Math.pow(lambdaEligibilityRate, (j - i))
 						* evaluationFunctionValues[j];
-				Rn[i][j - i] = value;
+				Rn[i][j] = value;
 			}
 		}
 		return Rn;

@@ -1,5 +1,6 @@
 package draughts;
 
+
 public class TDSimple extends TD{
 	
 	public TDSimple(double[] initialWeights, double a, double b) {

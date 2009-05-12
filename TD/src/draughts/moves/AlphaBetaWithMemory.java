@@ -3,6 +3,7 @@ package draughts.moves;
 import java.util.List;
 import java.util.Set;
 
+
 import draughts.Author;
 import draughts.FeatureCalculations;
 import draughts.ITD;
