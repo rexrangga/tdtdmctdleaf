@@ -3,6 +3,7 @@ package draughts.moves;
 import java.util.List;
 import java.util.Set;
 
+
 import draughts.Checker;
 import draughts.CheckerModel;
 import draughts.ITD;
