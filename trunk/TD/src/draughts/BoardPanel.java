@@ -526,6 +526,7 @@ public class BoardPanel extends JPanel {
 							return;
 						}
 						parentFrame.getChatArea().append("\nRuch przeciwnika...");
+						parentFrame.getChatArea().setCaretPosition(parentFrame.getChatArea().getDocument().getLength());
 					}
 
 					return;
@@ -581,9 +582,11 @@ public class BoardPanel extends JPanel {
 				if (!parentFrame.isGameIsOn()) {
 					return;
 				}
-				parentFrame.getChatArea().append("\nRuch przeciwnika...");
 			}
 		}
+		if(parentFrame.isGameIsOn())
+		parentFrame.getChatArea().append("\nRuch przeciwnika...");
+		parentFrame.getChatArea().setCaretPosition(parentFrame.getChatArea().getDocument().getLength());
 	}
 
 	/**
