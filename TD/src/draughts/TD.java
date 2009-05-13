@@ -71,18 +71,14 @@ public abstract class TD implements ITD {
 				if (player != gameData.playerCheckersSort) {
 					if (result) {
 						losses++;
-						winns++;
 					} else {
-						losses--;
-						winns--;
+						winns++;
 					}
 				} else {
 					if (!result) {
 						losses++;
-						winns++;
 					} else {
-						losses--;
-						winns--;
+						winns++;
 					}
 				}
 			}
@@ -103,7 +99,7 @@ public abstract class TD implements ITD {
 
 			// game ended
 			if (allPossibleMoves.size() == 0) {
-				return nextPlayer == player;
+				return !(nextPlayer == player);
 			}
 
 			// change player
