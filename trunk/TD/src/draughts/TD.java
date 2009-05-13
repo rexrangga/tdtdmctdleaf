@@ -30,13 +30,10 @@ public abstract class TD implements ITD {
 	public double calculateEvaluationFunction(double[] features) {
 		if (features == null || features.length != weights.length)
 			return 0;
-
 		double sum = 0.0;
-
 		for (int i = 0; i < weights.length; i++) {
 			sum += features[i] * weights[i];
 		}
-
 		return a * Math.tanh(b * sum);
 	}
 
