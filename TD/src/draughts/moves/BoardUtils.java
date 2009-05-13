@@ -83,10 +83,22 @@ public class BoardUtils {
 		return result;
 	}
 
-	public static boolean isBeating(List<MoveMessage> list) {
+	public static boolean isBeating(List<MoveMessage> list, CheckerModel[][] board) {
 		MoveMessage mm = list.get(0);
 		int dx = Math.abs(mm.getFirst().getI() - mm.getSecond().getI());
 		int dy = Math.abs(mm.getFirst().getJ() - mm.getSecond().getJ());
-		return dx == dy && dx > 1;
+		if (Math.abs(dx) == 1) {
+			return false;
+		}
+		int directionX = (mm.getSecond().getI() - mm.getFirst().getI()) / dx;
+		int directionY = (mm.getSecond().getJ() - mm.getFirst().getJ()) / dy;
+		for (int i = 1; i < dx; i++) {
+			int iIdx = mm.getFirst().getI() + directionX * i;
+			int jIdx = mm.getFirst().getJ() + directionY * i;
+			if (board[iIdx][jIdx] != null) {
+				return true;
+			}
+		}
+		return false;
 	}
 }
