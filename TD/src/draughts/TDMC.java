@@ -88,7 +88,8 @@ public class TDMC extends TD {
 				double value = 0.0;
 				// for given value of n calculate sum
 				for (int k = 0; k < j - 1; k++) {
-					value += Math.pow(lambdaEligibilityRate, k) * rewards[k];
+					value += Math.pow(lambdaEligibilityRate, k)
+							* rewards[k + i];
 				}
 				value += Math.pow(lambdaEligibilityRate, (j - i))
 						* evaluationFunctionValues[j];
