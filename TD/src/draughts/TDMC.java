@@ -26,8 +26,8 @@ public class TDMC extends TD {
 		// calculate evaluation function gradient
 		// first dimension - time moment, second dimension - weight derrivates
 		double[][] evaulationFunctionGradient = computeEvaluationFunctionGradient(gameData.evaluationFunctionFeatures);
-		double[] rewards = calculateMonteCarloWinningProbabilities(gameData,
-				simNumber);
+		double[] rewards = { 0.5, 0.6, 0.2, 0.3, 1 };
+		// = calculateMonteCarloWinningProbabilities(gameData, simNumber);
 		double[] Rt = computeReturn(rewards);
 		double[][] RTNStep = computeNStepReturn(rewards,
 				evaluationFunctionValues);
@@ -64,7 +64,7 @@ public class TDMC extends TD {
 		for (int i = 0; i < returns.length; i++) {
 			double value = 0.0;
 			for (int j = i; j < returns.length; j++)
-				value += Math.pow(lambdaEligibilityRate, j - 1) * returns[j];
+				value += Math.pow(lambdaEligibilityRate, j - i) * returns[j];
 			Rt[i] = value;
 		}
 		return Rt;
@@ -87,11 +87,11 @@ public class TDMC extends TD {
 			for (int j = 0; j < Rn[i].length; j++) {
 				double value = 0.0;
 				// for given value of n calculate sum
-				for (int k = 0; k < j - 1; k++) {
+				for (int k = 0; k < j; k++) {
 					value += Math.pow(lambdaEligibilityRate, k)
 							* rewards[k + i];
 				}
-				value += Math.pow(lambdaEligibilityRate, (j - i))
+				value += Math.pow(lambdaEligibilityRate, (j))
 						* evaluationFunctionValues[j];
 				Rn[i][j] = value;
 			}
@@ -129,7 +129,7 @@ public class TDMC extends TD {
 			double[] evluationFunctionValues) {
 		for (int i = 0; i < weights.length; i++) {
 			double value = 0.0;
-			for (int j = 0; j < RTLambda.length; j++) {
+			for (int j = 0; j < RTLambda.length - 1; j++) {
 				value += (RTLambda[j] - evluationFunctionValues[j])
 						* evaluationFunctionGradient[j][i];
 			}
