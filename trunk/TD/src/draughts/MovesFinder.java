@@ -61,7 +61,7 @@ public class MovesFinder {
 
 	public Set<List<MoveMessage>> getMoves(boolean lookForNonBeatings, boolean lookForBeatings,
 			UpdateResultSetStrategy strategy) {
-		System.out.println("getMoves");
+
 		Sort myRegular = Author.owner.equals(author) ? Sort.fullWhite : Sort.fullBlack;
 		Sort myQueen = Author.owner.equals(author) ? Sort.queenWhite : Sort.queenBlack;
 		EnumSet<Sort> mySorts = EnumSet.of(myQueen, myRegular);
@@ -76,7 +76,6 @@ public class MovesFinder {
 				if (currChecker != null && mySorts.contains(currChecker.getKind())) {
 					CheckerModel[][] board = BoardUtils.makeCopy(m_board);
 					List<CheckerModel> beatings = lookForBeatings ? checkBeating(currChecker, board) : null;
-					System.out.println("!!! " + (beatings != null ? beatings.size() : 0));
 					if ((beatings == null || beatings.isEmpty()) && !foundBeating && lookForNonBeatings) {
 						List<CheckerModel> nonBeatings = checkFree(currChecker, board);
 						for (CheckerModel nonBeating : nonBeatings) {

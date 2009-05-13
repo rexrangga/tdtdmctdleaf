@@ -297,20 +297,21 @@ public class Frame extends javax.swing.JFrame {
         } else {
             CheckerModel first = o.getFirst();
             CheckerModel second = o.getSecond();
-            boardPanel1.deleteIfBeaten(second, first);
-            if (!gameIsOn) {
-                return;
-            }
+            
             boardPanel1.getCheckersArray()[first.getI()][first.getJ()].setKind(first.getKind());
             boardPanel1.getCheckersArray()[second.getI()][second.getJ()].setKind(second.getKind());
             boardPanel1.setCheckerIcon(boardPanel1.getCheckersArray()[first.getI()][first.getJ()], first.getKind());
             boardPanel1.setCheckerIcon(boardPanel1.getCheckersArray()[second.getI()][second.getJ()], second.getKind());
+
+            boardPanel1.deleteIfBeaten(second, first);
+            if (!gameIsOn) {
+                return;
+            }
             if (o.isEndsTurn()) {
                 yourTurn = true;
                 chatArea.append("\nTwój ruch...");
                 chatArea.setCaretPosition(chatArea.getDocument().getLength());
                 if(artificialGame){
-                	System.out.println("o co chodzi");
                 	boardPanel1.makeMoves(mtd.getBestMoveDefault(boardPanel1.getCheckersArray(), myPlayer, itd));
                 }
             }
@@ -445,6 +446,9 @@ public class Frame extends javax.swing.JFrame {
             chatArea.append("\nTwój kolor : biały...");
             chatArea.append("\nTwój ruch...");
             yourTurn = true;
+            if(artificialGame){
+            	boardPanel1.makeMoves(mtd.getBestMoveDefault(boardPanel1.getCheckersArray(), myPlayer, itd));
+            }
         } else {
             chatArea.append("\nTwój kolor : czarny...");
             chatArea.append("\nRuch przeciwnika...");

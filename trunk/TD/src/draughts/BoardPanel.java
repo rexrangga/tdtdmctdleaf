@@ -163,11 +163,15 @@ public class BoardPanel extends JPanel {
 						JOptionPane.INFORMATION_MESSAGE);
 			}
 			if (blacks == 0 || whites == 0) {
-				parentFrame.getChatArea().append("\nAby rozpocząć grę naciśnij Nowa Gra.");
-				parentFrame.getChatArea().setCaretPosition(parentFrame.getChatArea().getDocument().getLength());
-				parentFrame.setGameIsOn(false);
+				finishGame();
 			}
 		}
+	}
+
+	private void finishGame() {
+		parentFrame.getChatArea().append("\nAby rozpocząć grę naciśnij Nowa Gra.");
+		parentFrame.getChatArea().setCaretPosition(parentFrame.getChatArea().getDocument().getLength());
+		parentFrame.setGameIsOn(false);
 	}
 
 	/**
@@ -323,28 +327,32 @@ public class BoardPanel extends JPanel {
 			}
 		} else {
 			if (i - 2 >= 0 && j - 2 >= 0) {
-				if ((getCheckersArray()[i - 1][j - 1].getKind() == opponent1 || getCheckersArray()[i - 1][j - 1].getKind() == opponent2)
+				if ((getCheckersArray()[i - 1][j - 1].getKind() == opponent1 || getCheckersArray()[i - 1][j - 1]
+						.getKind() == opponent2)
 						&& getCheckersArray()[i - 2][j - 2].getKind() == Sort.blankBlack) {
 					beatingMoves.add(getCheckersArray()[i - 2][j - 2]);
 				}
 
 			}
 			if (i - 2 >= 0 && j + 2 < 10) {
-				if ((getCheckersArray()[i - 1][j + 1].getKind() == opponent1 || getCheckersArray()[i - 1][j + 1].getKind() == opponent2)
+				if ((getCheckersArray()[i - 1][j + 1].getKind() == opponent1 || getCheckersArray()[i - 1][j + 1]
+						.getKind() == opponent2)
 						&& getCheckersArray()[i - 2][j + 2].getKind() == Sort.blankBlack) {
 					beatingMoves.add(getCheckersArray()[i - 2][j + 2]);
 				}
 
 			}
 			if (i + 2 < 10 && j - 2 >= 0) {
-				if ((getCheckersArray()[i + 1][j - 1].getKind() == opponent1 || getCheckersArray()[i + 1][j - 1].getKind() == opponent2)
+				if ((getCheckersArray()[i + 1][j - 1].getKind() == opponent1 || getCheckersArray()[i + 1][j - 1]
+						.getKind() == opponent2)
 						&& getCheckersArray()[i + 2][j - 2].getKind() == Sort.blankBlack) {
 					beatingMoves.add(getCheckersArray()[i + 2][j - 2]);
 				}
 
 			}
 			if (i + 2 < 10 && j + 2 < 10) {
-				if ((getCheckersArray()[i + 1][j + 1].getKind() == opponent1 || getCheckersArray()[i + 1][j + 1].getKind() == opponent2)
+				if ((getCheckersArray()[i + 1][j + 1].getKind() == opponent1 || getCheckersArray()[i + 1][j + 1]
+						.getKind() == opponent2)
 						&& getCheckersArray()[i + 2][j + 2].getKind() == Sort.blankBlack) {
 					beatingMoves.add(getCheckersArray()[i + 2][j + 2]);
 				}
@@ -429,13 +437,15 @@ public class BoardPanel extends JPanel {
 			for (int j = 0; j < 10; j++) {
 				if ((i + j) % 2 != 0) {
 					if (parentFrame.getMyPlayer().getMAuthor() == Author.owner) {
-						if ((getCheckersArray()[i][j].getKind() == Sort.fullWhite || getCheckersArray()[i][j].getKind() == Sort.queenWhite)
+						if ((getCheckersArray()[i][j].getKind() == Sort.fullWhite || getCheckersArray()[i][j]
+								.getKind() == Sort.queenWhite)
 								&& checkBeating(getCheckersArray()[i][j]).size() != 0) {
 							mustBeFirstChosen.add(getCheckersArray()[i][j]);
 						}
 
 					} else {
-						if ((getCheckersArray()[i][j].getKind() == Sort.fullBlack || getCheckersArray()[i][j].getKind() == Sort.queenBlack)
+						if ((getCheckersArray()[i][j].getKind() == Sort.fullBlack || getCheckersArray()[i][j]
+								.getKind() == Sort.queenBlack)
 								&& checkBeating(getCheckersArray()[i][j]).size() != 0) {
 							mustBeFirstChosen.add(getCheckersArray()[i][j]);
 						}
@@ -451,9 +461,10 @@ public class BoardPanel extends JPanel {
 	public class ClickActionListener implements ActionListener {
 
 		/**
-		 * Sprawdza czy użytkownik chce wykonać dozwolony ruch. Po wykonaniu ruchu decyduje czy użytkownik zakończył
-		 * sekwencję ruchów oraz jeśli wystąpiły bicia usuwa zbite pionki z planszy. Wysyła informację o ruchu
-		 * przeciwnikowi.
+		 * Sprawdza czy użytkownik chce wykonać dozwolony ruch. Po wykonaniu
+		 * ruchu decyduje czy użytkownik zakończył sekwencję ruchów oraz jeśli
+		 * wystąpiły bicia usuwa zbite pionki z planszy. Wysyła informację o
+		 * ruchu przeciwnikowi.
 		 * 
 		 * @param e
 		 *            Zdarzenie.
@@ -499,23 +510,17 @@ public class BoardPanel extends JPanel {
 					chosenLast.setBorder(null);
 
 					if (toBeatList.contains(jb) && (toBeatList = checkBeating(jb)).size() > 0) {
-						parentFrame.sendMoveMessage(new MoveMessage(new CheckerModel(jb), new CheckerModel(chosenLast),
-								parentFrame.getMyPlayer().getMAuthor(), false));
+						parentFrame.sendMoveMessage(new MoveMessage(new CheckerModel(jb), new CheckerModel(
+								chosenLast), parentFrame.getMyPlayer().getMAuthor(), false));
 						parentFrame.setYourTurn(true);
 						chosen = true;
 						jb.setBorder(BorderFactory.createLineBorder(Color.WHITE, 2));
 						chosenLast = jb;
 						toBeatList = checkBeating(jb);
 					} else {
-						if (jb.getKind() == Sort.fullWhite && jb.getI() == 0) {
-							jb.setKind(Sort.queenWhite);
-							setCheckerIcon(jb, Sort.queenWhite);
-						} else if (jb.getKind() == Sort.fullBlack && jb.getI() == 7) {
-							jb.setKind(Sort.queenBlack);
-							setCheckerIcon(jb, Sort.queenBlack);
-						}
-						parentFrame.sendMoveMessage(new MoveMessage(new CheckerModel(jb), new CheckerModel(chosenLast),
-								parentFrame.getMyPlayer().getMAuthor(), true));
+						changePossibleQueens(jb);
+						parentFrame.sendMoveMessage(new MoveMessage(new CheckerModel(jb), new CheckerModel(
+								chosenLast), parentFrame.getMyPlayer().getMAuthor(), true));
 						parentFrame.setYourTurn(false);
 						if (!parentFrame.isGameIsOn()) {
 							return;
@@ -529,8 +534,27 @@ public class BoardPanel extends JPanel {
 		}
 	}
 
+	private void changePossibleQueens(Checker jb) {
+		if (jb.getKind() == Sort.fullWhite && jb.getI() == 0) {
+			jb.setKind(Sort.queenWhite);
+			setCheckerIcon(jb, Sort.queenWhite);
+		} else if (jb.getKind() == Sort.fullBlack && jb.getI() == 9) {
+			jb.setKind(Sort.queenBlack);
+			setCheckerIcon(jb, Sort.queenBlack);
+		}
+	}
+
 	public void makeMoves(List<MoveMessage> moves) {
-		System.out.println("moves size: " + moves.size());
+		if (moves == null || moves.size() == 0) {
+			if (parentFrame.getMyPlayer().getMAuthor() == Author.opponent) {
+				JOptionPane.showMessageDialog(null, "Koniec gry. Zwyciężył kolor biały.", "Koniec gry",
+						JOptionPane.INFORMATION_MESSAGE);
+			} else if (parentFrame.getMyPlayer().getMAuthor() == Author.owner) {
+				JOptionPane.showMessageDialog(null, "Koniec gry. Zwyciężył kolor czarny.", "Koniec gry",
+						JOptionPane.INFORMATION_MESSAGE);
+			}
+			finishGame();
+		}
 		for (int i = 0; i < moves.size(); i++) {
 			CheckerModel first = moves.get(i).getFirst();
 			CheckerModel second = moves.get(i).getSecond();
@@ -543,14 +567,16 @@ public class BoardPanel extends JPanel {
 					checkersArray[second.getI()][second.getJ()]));
 			if (i < moves.size() - 1) {
 				parentFrame.sendMoveMessage(new MoveMessage(new CheckerModel(
-						checkersArray[second.getI()][second.getJ()]), new CheckerModel(
-						checkersArray[first.getI()][first.getJ()]), parentFrame.getMyPlayer().getMAuthor(), false));
+						checkersArray[second.getI()][second.getJ()]), new CheckerModel(checkersArray[first
+						.getI()][first.getJ()]), parentFrame.getMyPlayer().getMAuthor(), false));
 
 				parentFrame.setYourTurn(true);
-			} else {// daaaamki
+			} else {
+				Checker possQueen = checkersArray[second.getI()][second.getJ()];
+				changePossibleQueens(possQueen);
 				parentFrame.sendMoveMessage(new MoveMessage(new CheckerModel(
-						checkersArray[second.getI()][second.getJ()]), new CheckerModel(
-						checkersArray[first.getI()][first.getJ()]), parentFrame.getMyPlayer().getMAuthor(), true));
+						checkersArray[second.getI()][second.getJ()]), new CheckerModel(checkersArray[first
+						.getI()][first.getJ()]), parentFrame.getMyPlayer().getMAuthor(), true));
 				parentFrame.setYourTurn(false);
 				if (!parentFrame.isGameIsOn()) {
 					return;
@@ -566,7 +592,8 @@ public class BoardPanel extends JPanel {
 	public class RightClickListener extends MouseAdapter {
 
 		/**
-		 * Jeżeli został naciśnięty prawy przycisk myszy, ostatnio zaznaczony pionek jest odznaczany.
+		 * Jeżeli został naciśnięty prawy przycisk myszy, ostatnio zaznaczony
+		 * pionek jest odznaczany.
 		 * 
 		 * @param e
 		 *            Zdarzenie myszki.
