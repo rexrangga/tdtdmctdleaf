@@ -3,7 +3,6 @@ package draughts.moves;
 import java.util.List;
 import java.util.Set;
 
-
 import draughts.Checker;
 import draughts.CheckerModel;
 import draughts.ITD;
@@ -16,12 +15,15 @@ public class Mtd {
 	private static final int F = 0;
 	private static final int MAX_DEPTH = 5;
 
+	private Checker[][] originalBoard;
+
 	private AlphaBetaWithMemory alphaBetaWithMemory = new AlphaBetaWithMemory();
 
 	public Mtd() {
 	}
 
 	public List<MoveMessage> getBestMove(Checker[][] bboard, int f, int maxDepth, Player me, ITD td) {
+		this.originalBoard = bboard;
 		CheckerModel[][] board = BoardUtils.fromChecker(bboard);
 		System.out.println("getBestMove");
 		MovesFinder mf = new MovesFinder(board, me.getMAuthor());
@@ -54,7 +56,7 @@ public class Mtd {
 				beta = g;
 			}
 			Node node = new Node(board);
-			g = alphaBetaWithMemory.evaluate(node, beta - 1, beta, maxDepth, true, me, td);
+			g = alphaBetaWithMemory.evaluate(node, beta - 1, beta, maxDepth, true, me, td, originalBoard);
 			if (g < beta) {
 				upperBound = g;
 			} else {
