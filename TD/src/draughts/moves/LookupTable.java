@@ -18,7 +18,7 @@ public class LookupTable {
 		return d;
 	}
 
-	public void storeUpper(Node node, int depth, int upper) {
+	public void storeUpper(Node node, int depth, double upper) {
 		Key key = new Key(node, depth);
 		Data data = lookupTable.get(key);
 		if (data == null) {
@@ -28,7 +28,7 @@ public class LookupTable {
 		data.setUpper(upper);
 	}
 
-	public void storeLower(Node node, int depth, int lower) {
+	public void storeLower(Node node, int depth, double lower) {
 		Key key = new Key(node, depth);
 		Data data = lookupTable.get(key);
 		if (data == null) {
@@ -39,21 +39,21 @@ public class LookupTable {
 	}
 
 	public class Data {
-		private Integer lower, upper;
+		private Double lower, upper;
 
-		public Integer getLower() {
+		public Double getLower() {
 			return lower;
 		}
 
-		public void setLower(Integer lower) {
+		public void setLower(Double lower) {
 			this.lower = lower;
 		}
 
-		public Integer getUpper() {
+		public Double getUpper() {
 			return upper;
 		}
 
-		public void setUpper(Integer upper) {
+		public void setUpper(Double upper) {
 			this.upper = upper;
 		}
 	}

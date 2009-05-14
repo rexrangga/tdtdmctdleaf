@@ -8,23 +8,25 @@ import javax.swing.BorderFactory;
 
 import draughts.Author;
 import draughts.Checker;
+import draughts.CheckerModel;
 import draughts.FeatureCalculations;
 import draughts.ITD;
 import draughts.MoveMessage;
 import draughts.MovesFinder;
+import draughts.Pair;
 import draughts.Player;
 
 public class AlphaBetaWithMemory {
 
 	private LookupTable lookup = new LookupTable();
 
-	public int evaluate1(Node node, int alpha, int beta, int depth, boolean myMove, Player me, ITD td,
-			Checker[][] originalBoard) {
-		return evaluate(node, alpha, beta, depth, myMove, me, td, originalBoard);
-	}
+	// public int evaluate1(Node node, int alpha, int beta, int depth, boolean myMove, Player me, ITD td,
+	// Checker[][] originalBoard) {
+	// return evaluate(node, alpha, beta, depth, myMove, me, td, originalBoard);
+	// }
 
-	public int evaluate(Node node, int alpha, int beta, int depth, boolean myMove, Player me, ITD td,
-			Checker[][] originalBoard) {
+	public Pair<Double, CheckerModel[][]> evaluate(Node node, double alpha, double beta, int depth, boolean myMove,
+			Player me, ITD td, Checker[][] originalBoard) {
 
 		// System.out.println("evaluate, depth = " + depth);
 		Author opponent = Author.owner.equals(me.getMAuthor()) ? Author.opponent : Author.owner;
@@ -32,10 +34,10 @@ public class AlphaBetaWithMemory {
 		LookupTable.Data data = lookup.lookup(node, depth);
 		if (data != null) {
 			if (data.getLower() != null && data.getLower() >= beta) {
-				return data.getLower();
+				return new Pair<Double, CheckerModel[][]>(data.getLower(), node.getBoard());
 			}
 			if (data.getUpper() != null && data.getUpper() <= alpha) {
-				return data.getUpper();
+				return new Pair<Double, CheckerModel[][]>(data.getUpper(), node.getBoard());
 			}
 			if (data.getLower() != null) {
 				alpha = Math.max(alpha, data.getLower());
@@ -45,16 +47,18 @@ public class AlphaBetaWithMemory {
 			}
 		}
 
-		int g = 0;
+		double g = 0;
 		MovesFinder mf = new MovesFinder(node.getBoard(), myMove ? me.getMAuthor() : opponent);
 		Set<List<MoveMessage>> legalMoves = mf.getLegalMoves();
 		boolean isTerminal = legalMoves.isEmpty();
+		CheckerModel[][] principalVariation = node.getBoard();
 		if (isTerminal || depth <= 0) {
 			FeatureCalculations featuresCalculator = new FeatureCalculations(node.getBoard(), me);
-			return (int) td.calculateEvaluationFunction(featuresCalculator.getEvaluationFunctionFeatures());
+			double value = td.calculateEvaluationFunction(featuresCalculator.getEvaluationFunctionFeatures());
+			return new Pair<Double, CheckerModel[][]>(value, principalVariation);
 		} else if (myMove) {
-			g = Integer.MIN_VALUE;
-			int a = alpha;
+			g = Double.NEGATIVE_INFINITY;
+			double a = alpha;
 			// MovesFinder mf = new MovesFinder(node.getBoard(), myMove ? me.getMAuthor() : opponent);
 			// Set<List<MoveMessage>> s = mf.getLegalMoves();
 			for (List<MoveMessage> list : legalMoves) {
@@ -68,17 +72,20 @@ public class AlphaBetaWithMemory {
 				int newDepth = depth - 1;
 				if (newDepth == 0 && BoardUtils.isBeating(list, node.getBoard())) {
 					newDepth = 1;
-					g = Math.max(g, evaluate1(newNode, a, beta, newDepth, !myMove, me, td, originalBoard));
-				} else {
-					g = Math.max(g, evaluate(newNode, a, beta, newDepth, !myMove, me, td, originalBoard));
 				}
+				Pair<Double, CheckerModel[][]> p = evaluate(newNode, a, beta, newDepth, !myMove, me, td, originalBoard);
+				if (p.getFirst() > g) {
+					g = p.getFirst();
+					principalVariation = p.getSecond();
+				}
+				// g = Math.max(g, p.getFirst());
 				a = Math.max(a, g);
 				originalBoard[mm.getSecond().getI()][mm.getSecond().getJ()].setBorder(null);
 			}
 
 		} else {
-			g = Integer.MAX_VALUE;
-			int b = beta;
+			g = Double.POSITIVE_INFINITY;
+			double b = beta;
 			// MovesFinder mf = new MovesFinder(node.getBoard(), myMove ? me.getMAuthor() : opponent);
 			// Set<List<MoveMessage>> s = mf.getLegalMoves();
 			for (List<MoveMessage> list : legalMoves) {
@@ -92,9 +99,11 @@ public class AlphaBetaWithMemory {
 				int newDepth = depth - 1;
 				if (newDepth == 0 && BoardUtils.isBeating(list, node.getBoard())) {
 					newDepth = 1;
-					g = Math.min(g, evaluate1(newNode, alpha, b, newDepth, !myMove, me, td, originalBoard));
-				} else {
-					g = Math.min(g, evaluate(newNode, alpha, b, newDepth, !myMove, me, td, originalBoard));
+				}
+				Pair<Double, CheckerModel[][]> p = evaluate(newNode, alpha, b, newDepth, !myMove, me, td, originalBoard);
+				if (p.getFirst() < g) {
+					g = p.getFirst();
+					principalVariation = p.getSecond();
 				}
 				b = Math.min(b, g);
 				originalBoard[mm.getSecond().getI()][mm.getSecond().getJ()].setBorder(null);
@@ -109,6 +118,6 @@ public class AlphaBetaWithMemory {
 			lookup.storeLower(node, depth, g);
 		}
 
-		return g;
+		return new Pair<Double, CheckerModel[][]>(g, principalVariation);
 	}
 }
