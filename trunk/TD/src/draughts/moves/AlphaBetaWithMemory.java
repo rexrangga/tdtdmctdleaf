@@ -1,13 +1,9 @@
 package draughts.moves;
 
-import java.awt.Color;
 import java.util.List;
 import java.util.Set;
 
-import javax.swing.BorderFactory;
-
 import draughts.Author;
-import draughts.Checker;
 import draughts.CheckerModel;
 import draughts.FeatureCalculations;
 import draughts.ITD;
@@ -26,7 +22,7 @@ public class AlphaBetaWithMemory {
 	// }
 
 	public Pair<Double, CheckerModel[][]> evaluate(Node node, double alpha, double beta, int depth, boolean myMove,
-			Player me, ITD td, Checker[][] originalBoard) {
+			Player me, ITD td) {
 
 		// System.out.println("evaluate, depth = " + depth);
 		Author opponent = Author.owner.equals(me.getMAuthor()) ? Author.opponent : Author.owner;
@@ -66,21 +62,21 @@ public class AlphaBetaWithMemory {
 					break;
 				}
 				MoveMessage mm = list.get(list.size() - 1);
-				originalBoard[mm.getSecond().getI()][mm.getSecond().getJ()].setBorder(BorderFactory.createLineBorder(Color.red));
+				// originalBoard[mm.getSecond().getI()][mm.getSecond().getJ()].setBorder(BorderFactory.createLineBorder(Color.red));
 				Node newNode = new Node(BoardUtils.performMoves(node.getBoard(), list));
 				// int newDepth = BoardUtils.isBeating(list) ? depth : depth - 1;
 				int newDepth = depth - 1;
 				if (newDepth == 0 && BoardUtils.isBeating(list, node.getBoard())) {
 					newDepth = 1;
 				}
-				Pair<Double, CheckerModel[][]> p = evaluate(newNode, a, beta, newDepth, !myMove, me, td, originalBoard);
+				Pair<Double, CheckerModel[][]> p = evaluate(newNode, a, beta, newDepth, !myMove, me, td);
 				if (p.getFirst() > g) {
 					g = p.getFirst();
 					principalVariation = p.getSecond();
 				}
 				// g = Math.max(g, p.getFirst());
 				a = Math.max(a, g);
-				originalBoard[mm.getSecond().getI()][mm.getSecond().getJ()].setBorder(null);
+				// originalBoard[mm.getSecond().getI()][mm.getSecond().getJ()].setBorder(null);
 			}
 
 		} else {
@@ -94,19 +90,19 @@ public class AlphaBetaWithMemory {
 				}
 				MoveMessage mm = list.get(list.size() - 1);
 				Node newNode = new Node(BoardUtils.performMoves(node.getBoard(), list));
-				originalBoard[mm.getSecond().getI()][mm.getSecond().getJ()].setBorder(BorderFactory.createLineBorder(Color.red));
+				// originalBoard[mm.getSecond().getI()][mm.getSecond().getJ()].setBorder(BorderFactory.createLineBorder(Color.red));
 				// int newDepth = BoardUtils.isBeating(list) ? depth : depth - 1;
 				int newDepth = depth - 1;
 				if (newDepth == 0 && BoardUtils.isBeating(list, node.getBoard())) {
 					newDepth = 1;
 				}
-				Pair<Double, CheckerModel[][]> p = evaluate(newNode, alpha, b, newDepth, !myMove, me, td, originalBoard);
+				Pair<Double, CheckerModel[][]> p = evaluate(newNode, alpha, b, newDepth, !myMove, me, td);
 				if (p.getFirst() < g) {
 					g = p.getFirst();
 					principalVariation = p.getSecond();
 				}
 				b = Math.min(b, g);
-				originalBoard[mm.getSecond().getI()][mm.getSecond().getJ()].setBorder(null);
+				// originalBoard[mm.getSecond().getI()][mm.getSecond().getJ()].setBorder(null);
 			}
 		}
 

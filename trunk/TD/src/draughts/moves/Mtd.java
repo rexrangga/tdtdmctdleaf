@@ -3,6 +3,7 @@ package draughts.moves;
 import java.util.List;
 import java.util.Set;
 
+import draughts.Author;
 import draughts.Checker;
 import draughts.CheckerModel;
 import draughts.GameData;
@@ -17,21 +18,31 @@ public class Mtd {
 	private static final int F = 0;
 	private static final int MAX_DEPTH = 5;
 
-	private Checker[][] originalBoard;
+	// private Checker[][] originalBoard;
 	private GameData gameData = new GameData();
 
 	private AlphaBetaWithMemory alphaBetaWithMemory = new AlphaBetaWithMemory();
 
-	public Mtd() {
+	public Mtd(Author player) {
+		gameData.playerCheckersSort = player;
+		gameData.startingCheckersSort = Author.owner;
 	}
 
 	public GameData getGameData() {
 		return gameData;
 	}
 
+	public List<MoveMessage> getBestMoveDefault(Checker[][] board, Player me, ITD td) {
+		return getBestMove(board, F, MAX_DEPTH, me, td);
+	}
+
 	public List<MoveMessage> getBestMove(Checker[][] bboard, int f, int maxDepth, Player me, ITD td) {
-		this.originalBoard = bboard;
+		// this.originalBoard = bboard;
 		CheckerModel[][] board = BoardUtils.fromChecker(bboard);
+		return getBestMove(board, f, maxDepth, me, td);
+	}
+
+	public List<MoveMessage> getBestMove(CheckerModel[][] board, int f, int maxDepth, Player me, ITD td) {
 		System.out.println("getBestMove");
 		MovesFinder mf = new MovesFinder(board, me.getMAuthor());
 		Set<List<MoveMessage>> legalMoves = mf.getLegalMoves();
@@ -53,10 +64,6 @@ public class Mtd {
 		return bestMove;
 	}
 
-	public List<MoveMessage> getBestMoveDefault(Checker[][] board, Player me, ITD td) {
-		return getBestMove(board, F, MAX_DEPTH, me, td);
-	}
-
 	private Pair<Double, CheckerModel[][]> evaluate(CheckerModel[][] board, double f, int maxDepth, Player me, ITD td) {
 		double g = f;
 		CheckerModel[][] principalVariation = null;
@@ -71,7 +78,7 @@ public class Mtd {
 			}
 			Node node = new Node(board);
 			Pair<Double, CheckerModel[][]> p = alphaBetaWithMemory.evaluate(node, beta - 1, beta, maxDepth, true, me,
-					td, originalBoard);
+					td);
 			g = p.getFirst();
 			principalVariation = p.getSecond();
 			if (g < beta) {
