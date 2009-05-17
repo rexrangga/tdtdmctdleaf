@@ -7,7 +7,8 @@ import java.util.Set;
 public class FeatureCalculations {
 
 	private CheckerModel[][] checkersArray;
-	private Player player;
+	// private Player player;
+	private Author author;
 
 	private Set<List<MoveMessage>> myBeatableMoves;
 	private Set<List<MoveMessage>> oppBeatableMoves;
@@ -15,14 +16,19 @@ public class FeatureCalculations {
 	private Set<List<MoveMessage>> oppNonBeatableMoves;
 
 	public FeatureCalculations(CheckerModel[][] checkersArray, Player player) {
-		this.player = player;
+		this(checkersArray, player.getMAuthor());
+	}
+
+	public FeatureCalculations(CheckerModel[][] checkersArray, Author author) {
+		// this.player = player;
+		this.author = author;
 		this.checkersArray = checkersArray;
 
-		MovesFinder myMovesFinder = new MovesFinder(checkersArray, player.getMAuthor());
+		MovesFinder myMovesFinder = new MovesFinder(checkersArray, author);
 		this.myBeatableMoves = myMovesFinder.getAllBeatings();
 		this.myNonBeatableMoves = myMovesFinder.getAllNonBeatings();
-		MovesFinder oppMovesFinder = new MovesFinder(checkersArray,
-				player.getMAuthor() == Author.owner ? Author.opponent : Author.owner);
+		MovesFinder oppMovesFinder = new MovesFinder(checkersArray, author == Author.owner ? Author.opponent
+				: Author.owner);
 		this.oppBeatableMoves = oppMovesFinder.getAllBeatings();
 		this.oppNonBeatableMoves = oppMovesFinder.getAllNonBeatings();
 	}
@@ -60,7 +66,7 @@ public class FeatureCalculations {
 		Iterator<List<MoveMessage>> it = moves.iterator();
 
 		int queensRow = 0;
-		if (player.getMAuthor() == Author.opponent)
+		if (author == Author.opponent)
 			queensRow = 9;
 
 		while (it.hasNext()) {
@@ -76,7 +82,7 @@ public class FeatureCalculations {
 	public double[] getEvaluationFunctionFeatures() {
 
 		double[] features = new double[12];
-		int iAmWhite = player.getMAuthor() == Author.owner ? 1 : 0;
+		int iAmWhite = author == Author.owner ? 1 : 0;
 
 		for (int i = 0; i < 12; i++)
 			features[i] = 0;
