@@ -18,7 +18,7 @@ public abstract class TD implements ITD {
 	private Random random = new Random();
 
 	public TD(double[] initialWeights, double a, double b) {
-		weights = initialWeights;
+		setWeights(initialWeights);
 		this.a = a;
 		this.b = b;
 	}
@@ -28,11 +28,11 @@ public abstract class TD implements ITD {
 	 * features;
 	 */
 	public double calculateEvaluationFunction(double[] features) {
-		if (features == null || features.length != weights.length)
+		if (features == null || features.length != getWeights().length)
 			return 0;
 		double sum = 0.0;
-		for (int i = 0; i < weights.length; i++) {
-			sum += features[i] * weights[i];
+		for (int i = 0; i < getWeights().length; i++) {
+			sum += features[i] * getWeights()[i];
 		}
 		return a * Math.tanh(b * sum);
 	}
@@ -55,7 +55,7 @@ public abstract class TD implements ITD {
 
 	protected double[] calculateMonteCarloWinningProbabilities(
 			GameData gameData, int simulationsNumber) {
-		// TODO napisaæ kod symulacji MonteCarlo
+		// TODO napisaï¿½ kod symulacji MonteCarlo
 		double[] probabilities = new double[gameData.evaluationFunctionFeatures
 				.size()];
 		for (int i = 0; i < probabilities.length; i++) {
@@ -120,5 +120,13 @@ public abstract class TD implements ITD {
 			board = BoardUtils.performMoves(board, choosenMove);
 		}
 		return true;
+	}
+
+	public void setWeights(double[] weights) {
+		this.weights = weights;
+	}
+
+	public double[] getWeights() {
+		return weights;
 	}
 }
