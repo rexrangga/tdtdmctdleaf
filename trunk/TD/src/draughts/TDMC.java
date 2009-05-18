@@ -44,9 +44,9 @@ public class TDMC extends TD {
 	 */
 	private double[][] computeEvaluationFunctionGradient(
 			List<double[]> evaluationFunctionFeatures) {
-		double[][] gradient = new double[evaluationFunctionFeatures.size()][weights.length];
+		double[][] gradient = new double[evaluationFunctionFeatures.size()][getWeights().length];
 		for (int i = 0; i < evaluationFunctionFeatures.size(); i++) {
-			for (int j = 0; j < weights.length; j++) {
+			for (int j = 0; j < getWeights().length; j++) {
 				gradient[i][j] = evaluationFunctionFeatures.get(i)[j];
 			}
 		}
@@ -127,13 +127,18 @@ public class TDMC extends TD {
 	private void updateWeights(double[] RTLambda,
 			double[][] evaluationFunctionGradient,
 			double[] evluationFunctionValues) {
-		for (int i = 0; i < weights.length; i++) {
+		for (int i = 0; i < getWeights().length; i++) {
 			double value = 0.0;
 			for (int j = 0; j < RTLambda.length - 1; j++) {
 				value += (RTLambda[j] - evluationFunctionValues[j])
 						* evaluationFunctionGradient[j][i];
 			}
-			weights[i] = weights[i] + alfaLearningRate * value;
+			getWeights()[i] = getWeights()[i] + alfaLearningRate * value;
 		}
+	}
+	
+	@Override
+	public double[] getWeigths() {
+		return super.weights;
 	}
 }

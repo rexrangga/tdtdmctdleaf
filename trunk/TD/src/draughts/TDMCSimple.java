@@ -17,4 +17,9 @@ public class TDMCSimple extends TD {
 				simNumber);
 
 	}
+	
+	@Override
+	public double[] getWeigths() {
+		return super.weights;
+	}
 }
