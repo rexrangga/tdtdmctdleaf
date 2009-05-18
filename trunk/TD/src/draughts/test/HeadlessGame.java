@@ -40,7 +40,7 @@ public class HeadlessGame {
 
 	public void learningMode(int gamesCount, ITD whitePlayer, ITD blackPlayer) {
 		try {
-			String name=formatter.format(new Date()) + ".game";
+			String name = formatter.format(new Date()) + ".game";
 			System.out.println("name:" + name);
 			File file = new File(name);
 			BufferedWriter out = new BufferedWriter(new FileWriter(file));
@@ -68,7 +68,13 @@ public class HeadlessGame {
 			for (int j = 0; j < 10; j++) {
 				checkersArray[i][j] = new Checker(i, j);
 				if ((i + j) % 2 != 0) {
-					checkersArray[i][j].setKind(Sort.blankBlack);
+					if (i < 4) {
+						checkersArray[i][j].setKind(Sort.fullBlack);
+					} else if (i >= 6) {
+						checkersArray[i][j].setKind(Sort.fullWhite);
+					} else {
+						checkersArray[i][j].setKind(Sort.blankBlack);
+					}
 				} else {
 					checkersArray[i][j].setKind(Sort.blankWhite);
 				}

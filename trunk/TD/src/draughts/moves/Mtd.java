@@ -59,9 +59,11 @@ public class Mtd {
 				bestVariation = p.getSecond();
 			}
 		}
-		gameData.m_board.add(BoardUtils.performMoves(board, bestMove));
-		gameData.statesEvaluations.add(bestValue);
-		gameData.principalVariation.add(bestVariation);
+		if (bestMove != null) {
+			gameData.m_board.add(BoardUtils.performMoves(board, bestMove));
+			gameData.statesEvaluations.add(bestValue);
+			gameData.principalVariation.add(bestVariation);
+		}
 		return bestMove;
 	}
 
