@@ -18,6 +18,9 @@ import javax.swing.JPanel;
  */
 public class BoardPanel extends JPanel {
 
+	private final int GAMES_COUNT=1000;
+	private final boolean LEARNING_MODE=true;
+	
 	private Icons boardIcons = new Icons();
 	private boolean chosen;
 	private Checker chosenLast;
@@ -555,6 +558,7 @@ public class BoardPanel extends JPanel {
 						JOptionPane.INFORMATION_MESSAGE);
 			}
 			finishGame();
+			return;
 		}
 		for (int i = 0; i < moves.size(); i++) {
 			CheckerModel first = moves.get(i).getFirst();
@@ -579,14 +583,11 @@ public class BoardPanel extends JPanel {
 						checkersArray[second.getI()][second.getJ()]), new CheckerModel(checkersArray[first
 						.getI()][first.getJ()]), parentFrame.getMyPlayer().getMAuthor(), true));
 				parentFrame.setYourTurn(false);
-				if (!parentFrame.isGameIsOn()) {
-					return;
-				}
+				parentFrame.getChatArea().append("\nRuch przeciwnika...");
+				parentFrame.getChatArea().setCaretPosition(parentFrame.getChatArea().getDocument().getLength());
 			}
 		}
-		if(parentFrame.isGameIsOn())
-		parentFrame.getChatArea().append("\nRuch przeciwnika...");
-		parentFrame.getChatArea().setCaretPosition(parentFrame.getChatArea().getDocument().getLength());
+		
 	}
 
 	/**
