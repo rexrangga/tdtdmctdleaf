@@ -14,6 +14,8 @@ public interface ITD {
 	 * Provides single game data, that should be used in the learning process.
 	 */
 	public void updateWeights(GameData gameData);
+	
+	public double[] getWeigths();
 }
 
 
