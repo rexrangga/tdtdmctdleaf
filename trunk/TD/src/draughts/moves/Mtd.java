@@ -39,11 +39,12 @@ public class Mtd {
 	public List<MoveMessage> getBestMove(Checker[][] bboard, int f, int maxDepth, Player me, ITD td) {
 		// this.originalBoard = bboard;
 		CheckerModel[][] board = BoardUtils.fromChecker(bboard);
+
 		return getBestMove(board, f, maxDepth, me, td);
 	}
 
 	public List<MoveMessage> getBestMove(CheckerModel[][] board, int f, int maxDepth, Player me, ITD td) {
-		System.out.println("getBestMove");
+
 		MovesFinder mf = new MovesFinder(board, me.getMAuthor());
 		Set<List<MoveMessage>> legalMoves = mf.getLegalMoves();
 		List<MoveMessage> bestMove = null;
