@@ -44,7 +44,7 @@ public class Main {
 		 * gd.evaluationFunctionFeatures.add(features4);
 		 * gd.evaluationFunctionFeatures.add(features5);
 		 * 
-		 * gd.m_board = null; gd.playerCheckersSort = Author.opponent;
+//		 * gd.m_board = null; gd.playerCheckersSort = Author.opponent;
 		 * gd.startingCheckersSort = Author.opponent;
 		 * 
 		 * tdmc.updateWeights(gd);

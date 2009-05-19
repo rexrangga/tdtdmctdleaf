@@ -12,6 +12,7 @@ public class BoardUtils {
 	public static final int BOARD_SIZE = 10;
 
 	public static CheckerModel[][] makeCopy(CheckerModel[][] board) {
+
 		CheckerModel[][] result = new CheckerModel[BOARD_SIZE][];
 		for (int i = 0; i < BOARD_SIZE; i++) {
 			CheckerModel[] temp = new CheckerModel[BOARD_SIZE];

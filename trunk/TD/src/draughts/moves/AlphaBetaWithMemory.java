@@ -5,6 +5,7 @@ import java.util.Set;
 
 import draughts.Author;
 import draughts.CheckerModel;
+import draughts.Data;
 import draughts.FeatureCalculations;
 import draughts.ITD;
 import draughts.MoveMessage;
@@ -27,7 +28,7 @@ public class AlphaBetaWithMemory {
 		// System.out.println("evaluate, depth = " + depth);
 		Author opponent = Author.owner.equals(me.getMAuthor()) ? Author.opponent : Author.owner;
 
-		LookupTable.Data data = lookup.lookup(node, depth);
+		Data data = lookup.lookup(node, depth);
 		if (data != null) {
 			if (data.getLower() != null && data.getLower() >= beta) {
 				return new Pair<Double, CheckerModel[][]>(data.getLower(), node.getBoard());
@@ -109,7 +110,8 @@ public class AlphaBetaWithMemory {
 		if (g <= alpha) {
 			lookup.storeUpper(node, depth, g);
 		} else if (g > alpha && g < beta) {
-			throw new RuntimeException("err");
+			lookup.storeLower(node, depth, g);
+			lookup.storeUpper(node, depth, g);
 		} else {
 			lookup.storeLower(node, depth, g);
 		}
