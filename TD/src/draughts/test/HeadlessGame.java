@@ -41,7 +41,6 @@ public class HeadlessGame {
 	public void learningMode(int gamesCount, ITD whitePlayer, ITD blackPlayer) {
 		try {
 			String name = formatter.format(new Date()) + ".game";
-			System.out.println("name:" + name);
 			File file = new File(name);
 			BufferedWriter out = new BufferedWriter(new FileWriter(file));
 			boolean whiteWins;
