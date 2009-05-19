@@ -93,13 +93,13 @@ public class FeatureCalculations {
 					continue;
 				}
 				if (checkersArray[i][j].getKind() == Sort.fullBlack) {
-					features[iAmWhite]++;
+					features[1-iAmWhite]++;
 				} else if (checkersArray[i][j].getKind() == Sort.fullWhite) {
 					features[iAmWhite]++;
 				} else if (checkersArray[i][j].getKind() == Sort.queenBlack) {
-					features[2 + iAmWhite]++;
+					features[3- iAmWhite]++;
 				} else if (checkersArray[i][j].getKind() == Sort.queenWhite) {
-					features[2 + iAmWhite]++;
+					features[2+ iAmWhite]++;
 				}
 			}
 		}

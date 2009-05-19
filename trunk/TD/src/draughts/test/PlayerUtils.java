@@ -24,6 +24,16 @@ public class PlayerUtils {
 	enum PlayerKind {
 		TD, TD_LEAF, TDMC;
 	}
+	
+	public static PlayerKind getKind(int which) {
+		switch (which) {
+		case (0):
+			return PlayerKind.TD;
+		case (1):
+			return PlayerKind.TD_LEAF;
+		}
+		return PlayerKind.TDMC;
+	}
 
 	public static ITD loadPlayer(String filePath, PlayerKind kind) throws IOException {
 		BufferedReader in = null;

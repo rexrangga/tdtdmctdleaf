@@ -17,7 +17,7 @@ import draughts.test.HeadlessGame;
  * 
  */
 public class Main {
-	private static final boolean LEARNING_MODE = true;
+
 	/**
 	 * Otwiera główne okno gry.
 	 * 
@@ -44,28 +44,25 @@ public class Main {
 		 * gd.evaluationFunctionFeatures.add(features4);
 		 * gd.evaluationFunctionFeatures.add(features5);
 		 * 
-//		 * gd.m_board = null; gd.playerCheckersSort = Author.opponent;
+		 * // gd.m_board = null; gd.playerCheckersSort = Author.opponent;
 		 * gd.startingCheckersSort = Author.opponent;
 		 * 
 		 * tdmc.updateWeights(gd);
 		 */
-		if (LEARNING_MODE) {
-			HeadlessGame headlessGame=new HeadlessGame();
-			headlessGame.play();
-		} else {
-			java.awt.EventQueue.invokeLater(new Runnable() {
 
-				public void run() {
-					Frame f = new Frame();
-					f.setVisible(true);
-					try {
-						UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-						SwingUtilities.updateComponentTreeUI(f);
-					} catch (Exception e) {
-						System.out.println(e.toString());
-					}
+		java.awt.EventQueue.invokeLater(new Runnable() {
+
+			public void run() {
+				Frame f = new Frame();
+				f.setVisible(true);
+				try {
+					UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+					SwingUtilities.updateComponentTreeUI(f);
+				} catch (Exception e) {
+					System.out.println(e.toString());
 				}
-			});
-		}
+			}
+		});
 	}
+
 }
