@@ -116,7 +116,6 @@ public class MovesFinder {
 				}
 			}
 		}
-		System.out.println(result.size());
 		return result;
 	}
 
