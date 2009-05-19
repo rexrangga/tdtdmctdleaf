@@ -6,6 +6,7 @@ import java.util.Set;
 import draughts.Author;
 import draughts.Checker;
 import draughts.CheckerModel;
+import draughts.FeatureCalculations;
 import draughts.GameData;
 import draughts.ITD;
 import draughts.MoveMessage;
@@ -60,7 +61,10 @@ public class Mtd {
 			}
 		}
 		if (bestMove != null) {
-			gameData.m_board.add(BoardUtils.performMoves(board, bestMove));
+			CheckerModel[][] newBoard = BoardUtils.performMoves(board, bestMove);
+			FeatureCalculations calculations = new FeatureCalculations(newBoard, me);
+			gameData.evaluationFunctionFeatures.add(calculations.getEvaluationFunctionFeatures());
+			gameData.m_board.add(newBoard);
 			gameData.statesEvaluations.add(bestValue);
 			gameData.principalVariation.add(bestVariation);
 		}
