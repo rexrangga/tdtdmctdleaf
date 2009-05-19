@@ -1,13 +1,6 @@
 package draughts.test;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
-import java.util.Random;
 
 import draughts.Author;
 import draughts.Checker;
@@ -16,50 +9,10 @@ import draughts.ITD;
 import draughts.MoveMessage;
 import draughts.Player;
 import draughts.Sort;
-import draughts.TDLambda;
 import draughts.moves.BoardUtils;
 import draughts.moves.Mtd;
 
 public class HeadlessGame {
-
-	private static final int GAMES_COUNT = 2;
-	private SimpleDateFormat formatter = new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss");
-
-	public void play() {
-		ITD whitePlayer = new TDLambda(fillRandomWeights(), 0, 0, 0, 0, 0);
-		ITD blackPlayer = new TDLambda(fillRandomWeights(), 0, 0, 0, 0, 0);
-		learningMode(GAMES_COUNT, whitePlayer, blackPlayer);
-	}
-
-	private double[] fillRandomWeights() {
-		double[] weights = new double[12];
-		for (int i = 0; i < 12; i++)
-			weights[i] = new Random().nextDouble();
-		return weights;
-	}
-
-	public void learningMode(int gamesCount, ITD whitePlayer, ITD blackPlayer) {
-		try {
-			String name = formatter.format(new Date()) + ".game";
-			File file = new File(name);
-			BufferedWriter out = new BufferedWriter(new FileWriter(file));
-			boolean whiteWins;
-			out.write("Wektor gracza -> " + whitePlayer.getWeigths());
-			out.write("Wektor przeciwnika -> " + blackPlayer.getWeigths());
-			for (int i = 0; i < gamesCount / 2; i++) {
-				whiteWins = playGame(whitePlayer, blackPlayer, true);
-				if (!whiteWins) {
-					out.write("Wygral przeciwnik. Uczymy gracza...");
-					out.write("Wektor po nauce -> " + whitePlayer.getWeigths());
-				} else {
-					out.write("Wygral uczen. Nie uczymy ...");
-				}
-			}
-			out.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
 
 	private Checker[][] createStartingBoard() {
 		Checker[][] checkersArray = new Checker[10][10];
@@ -84,7 +37,7 @@ public class HeadlessGame {
 		return checkersArray;
 	}
 
-	public boolean playGame(ITD whitePlayer, ITD blackPlayer, boolean learningWhite) {
+	public boolean playGame(ITD whitePlayer, ITD blackPlayer, boolean learningWhite, int i) {
 		Checker[][] bboard = createStartingBoard();
 		CheckerModel[][] board = BoardUtils.fromChecker(bboard);
 
@@ -118,7 +71,7 @@ public class HeadlessGame {
 		} else if (!whiteWins && learningWhite) {
 			whitePlayer.updateWeights(whiteMtd.getGameData());
 		}
-
+		
 		return whiteWins;
 	}
 }
