@@ -101,15 +101,17 @@ public class HeadlessGame {
 			if (list == null) {
 				finished = true;
 				whiteWins = false;
+			} else {
+				board = BoardUtils.performMoves(board, list);
 			}
-			board = BoardUtils.performMoves(board, list);
 			if (!finished) {
 				list = blackMtd.getBestMove(board, 0, 5, black, blackPlayer);
 				if (list == null) {
 					finished = true;
 					whiteWins = true;
+				} else {
+					board = BoardUtils.performMoves(board, list);
 				}
-				board = BoardUtils.performMoves(board, list);
 			}
 		}
 		if (whiteWins && !learningWhite) {
