@@ -27,12 +27,24 @@ public class HeadlessTraining {
 			}
 			Boolean whiteWins = headlessGame.playGame(whitePlayer, blackPlayer, trainingWhite, i);
 			if (whiteWins == null) {
+				out.write("\nPartia nr " + i + " zakonczona remisem.");
 				drawCounter++;
-			} else if ((trainingWhite && whiteWins) || (!trainingWhite && !whiteWins))
+			} else if ((trainingWhite && whiteWins) || (!trainingWhite && !whiteWins)) {
 				trainedPlayerWinsCounter++;
+				out.write("\nPartie nr " + i + " wygral gracz uczacy sie.");
+			} else {
+				out.write("\nPartie nr " + i + " wygral przeciwnik.");
+				out.write(" Wektor po nauce: ");
+				ITD playingPlayer = trainingWhite ? whitePlayer : blackPlayer;
+				for (int j = 0; j < playingPlayer.getWeigths().length; j++) {
+					out.write(String.valueOf(playingPlayer.getWeigths()[j]));
+					out.write(" ");
+				}
+			}
+			out.flush();
 		}
 
-		out.write("Gracz uczacy sie wygral " + trainedPlayerWinsCounter + " i zremisowal " + drawCounter + " z "
-				+ numGames + " gier.");
+		out.write("\nGracz uczacy sie wygral " + trainedPlayerWinsCounter + " i zremisowal " + drawCounter
+				+ " z " + numGames + " gier.");
 	}
 }
