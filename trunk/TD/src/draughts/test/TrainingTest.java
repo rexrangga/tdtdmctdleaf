@@ -43,7 +43,7 @@ public class TrainingTest {
 
 		File file = new File(historyFilename);
 		BufferedWriter out = new BufferedWriter(new FileWriter(file));		
-		training.train(trainedPlayer, opponent, 10, out);
+		training.train(trainedPlayer, opponent, gamesCount, out);
 		PlayerUtils.savePlayer(trainedPlayer, afterVectorFilename);
 		out.close();
 	}
