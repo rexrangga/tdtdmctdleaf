@@ -1,19 +1,21 @@
 package draughts.test;
 
 import java.io.BufferedWriter;
+import java.io.IOException;
 
 import draughts.ITD;
+import draughts.test.PlayerUtils.PlayerKind;
 
 public class HeadlessTraining {
 
-	public void train(ITD trainedPlayer, ITD opponent, int numGames, BufferedWriter out) throws Exception {
-
+	public void train(ITD trainedPlayer, int numGames, BufferedWriter out) throws IOException {
 		HeadlessGame headlessGame = new HeadlessGame();
 
 		int trainedPlayerWinsCounter = 0;
 		int drawCounter = 0;
 
 		for (int i = 0; i < numGames; i++) {
+			ITD opponent = PlayerUtils.createRandomPlayer(PlayerKind.TD);
 			ITD whitePlayer = null, blackPlayer = null;
 			boolean trainingWhite = false;
 			if (i % 2 == 0) {
@@ -44,7 +46,22 @@ public class HeadlessTraining {
 			out.flush();
 		}
 
-		out.write("\nGracz uczacy sie wygral " + trainedPlayerWinsCounter + " i zremisowal " + drawCounter
-				+ " z " + numGames + " gier.");
+		out.write("\nGracz uczacy sie wygral " + trainedPlayerWinsCounter + " i zremisowal " + drawCounter + " z "
+				+ numGames + " gier.");
+	}
+
+	/**
+	 * Parameter <code>opponent</code> is ignored. Use method
+	 * <code>train(ITD trainedPlayer, int numGames, BufferedWriter out)</code> instead.
+	 * 
+	 * @param trainedPlayer
+	 * @param opponent
+	 * @param numGames
+	 * @param out
+	 * @throws Exception
+	 */
+	@Deprecated
+	public void train(ITD trainedPlayer, ITD opponent, int numGames, BufferedWriter out) throws Exception {
+		train(trainedPlayer, numGames, out);
 	}
 }
