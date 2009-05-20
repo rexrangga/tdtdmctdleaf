@@ -14,6 +14,8 @@ import draughts.moves.Mtd;
 
 public class HeadlessGame {
 
+	private static final int MAX_NONBEATINGS = 50;
+
 	private Checker[][] createStartingBoard() {
 		Checker[][] checkersArray = new Checker[10][10];
 		for (int i = 0; i < 10; i++) {
@@ -37,7 +39,7 @@ public class HeadlessGame {
 		return checkersArray;
 	}
 
-	public boolean playGame(ITD whitePlayer, ITD blackPlayer, boolean learningWhite, int i) {
+	public Boolean playGame(ITD whitePlayer, ITD blackPlayer, boolean learningWhite, int i) {
 		Checker[][] bboard = createStartingBoard();
 		CheckerModel[][] board = BoardUtils.fromChecker(bboard);
 
@@ -48,12 +50,21 @@ public class HeadlessGame {
 
 		boolean finished = false;
 		boolean whiteWins = false;
+		boolean draw = false;
+		int noBeatingsCount = 0;
 		while (!finished) {
 			List<MoveMessage> list = whiteMtd.getBestMove(board, 0, 5, white, whitePlayer);
 			if (list == null) {
 				finished = true;
 				whiteWins = false;
 			} else {
+				if (BoardUtils.isBeating(list, board)) {
+					noBeatingsCount = 0;
+				} else {
+					noBeatingsCount++;
+					finished = noBeatingsCount >= MAX_NONBEATINGS;
+					draw = noBeatingsCount >= MAX_NONBEATINGS;
+				}
 				board = BoardUtils.performMoves(board, list);
 			}
 			if (!finished) {
@@ -62,16 +73,23 @@ public class HeadlessGame {
 					finished = true;
 					whiteWins = true;
 				} else {
+					if (BoardUtils.isBeating(list, board)) {
+						noBeatingsCount = 0;
+					} else {
+						noBeatingsCount++;
+						finished = noBeatingsCount >= MAX_NONBEATINGS;
+						draw = noBeatingsCount >= MAX_NONBEATINGS;
+					}
 					board = BoardUtils.performMoves(board, list);
 				}
 			}
 		}
-		if (whiteWins && !learningWhite) {
+		if ((whiteWins || draw) && !learningWhite) {
 			blackPlayer.updateWeights(blackMtd.getGameData());
-		} else if (!whiteWins && learningWhite) {
+		} else if ((!whiteWins || draw) && learningWhite) {
 			whitePlayer.updateWeights(whiteMtd.getGameData());
 		}
-		
-		return whiteWins;
+
+		return draw ? null : whiteWins;
 	}
 }
