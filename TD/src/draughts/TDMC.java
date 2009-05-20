@@ -9,7 +9,7 @@ public class TDMC extends TD {
 	double gammaDiscountRate = 0.5;
 	double lambdaEligibilityRate = 0.5;
 	double alfaLearningRate = 0.2;
-	int simNumber = 5000;
+	int simNumber = 500;
 
 	public TDMC(double[] weights, double gammaDiscountRate,
 			double lambdaEligibilityRate, double alfaLearningRate, double a,
@@ -22,19 +22,30 @@ public class TDMC extends TD {
 
 	public void updateWeights(GameData gameData) {
 		// first step of the algorithm - calculate evaluationFunctionValues
+		System.out.println(gameData.m_board.size());
+		System.out.println("1");
+		printDoubleTable(weights);
 		double[] evaluationFunctionValues = calculateEvaluationFunctionValue(gameData.evaluationFunctionFeatures);
+		printDoubleTable(evaluationFunctionValues);
 		// calculate evaluation function gradient
 		// first dimension - time moment, second dimension - weight derrivates
+		System.out.println("2");
 		double[][] evaulationFunctionGradient = computeEvaluationFunctionGradient(gameData.evaluationFunctionFeatures);
-		double[] rewards = { 0.5, 0.6, 0.2, 0.3, 1 };
-		// = calculateMonteCarloWinningProbabilities(gameData, simNumber);
+		System.out.println("Ev:" + gameData.evaluationFunctionFeatures.size());
+		double[] rewards = calculateMonteCarloWinningProbabilities(gameData,
+				simNumber);
+		printDoubleTable(rewards);
+		System.out.println("3");
 		double[] Rt = computeReturn(rewards);
+		printDoubleTable(Rt);
 		double[][] RTNStep = computeNStepReturn(rewards,
 				evaluationFunctionValues);
+		System.out.println("4");
 		double[] RTLambda = computeLabdaReturn(RTNStep, Rt);
-
+		printDoubleTable(RTLambda);
 		updateWeights(RTLambda, evaulationFunctionGradient,
 				evaluationFunctionValues);
+		printDoubleTable(weights);
 	}
 
 	/**
@@ -45,12 +56,20 @@ public class TDMC extends TD {
 	private double[][] computeEvaluationFunctionGradient(
 			List<double[]> evaluationFunctionFeatures) {
 		double[][] gradient = new double[evaluationFunctionFeatures.size()][getWeights().length];
-		for (int i = 0; i < evaluationFunctionFeatures.size(); i++) {
+		for (int i = 0; i < evaluationFunctionFeatures.size() - 1; i++) {
 			for (int j = 0; j < getWeights().length; j++) {
 				gradient[i][j] = evaluationFunctionFeatures.get(i)[j];
 			}
 		}
 		return gradient;
+	}
+
+	private void printDoubleTable(double[] values) {
+		String text = "";
+		for (int i = 0; i < values.length; i++) {
+			text += String.valueOf((values[i])) + " ";
+		}
+		System.out.println(text);
 	}
 
 	/**
@@ -127,16 +146,18 @@ public class TDMC extends TD {
 	private void updateWeights(double[] RTLambda,
 			double[][] evaluationFunctionGradient,
 			double[] evluationFunctionValues) {
+		System.out.println("Starting updating weights -TDMC");
 		for (int i = 0; i < getWeights().length; i++) {
 			double value = 0.0;
-			for (int j = 0; j < RTLambda.length - 1; j++) {
+			for (int j = 0; j < RTLambda.length; j++) {
 				value += (RTLambda[j] - evluationFunctionValues[j])
 						* evaluationFunctionGradient[j][i];
 			}
 			getWeights()[i] = getWeights()[i] + alfaLearningRate * value;
 		}
+		System.out.println("LEarning ended - TDMC weights updated");
 	}
-	
+
 	@Override
 	public double[] getWeigths() {
 		return super.weights;

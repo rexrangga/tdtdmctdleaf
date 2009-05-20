@@ -47,7 +47,7 @@ public abstract class TD implements ITD {
 	 */
 	protected double[] calculateEvaluationFunctionValue(List<double[]> features) {
 		double[] functionValues = new double[features.size()];
-		for (int i = 0; i < features.size(); i++) {
+		for (int i = 0; i < features.size() - 1; i++) {
 			functionValues[i] = calculateEvaluationFunction(features.get(i));
 		}
 		return functionValues;
@@ -57,29 +57,26 @@ public abstract class TD implements ITD {
 			GameData gameData, int simulationsNumber) {
 		// TODO napisa� kod symulacji MonteCarlo
 		double[] probabilities = new double[gameData.evaluationFunctionFeatures
-				.size()];
+				.size() - 1];
 		for (int i = 0; i < probabilities.length; i++) {
 			int winns = 0;
 			int losses = 0;
 			for (int j = 0; j < simulationsNumber; j++) {
-				Author player = i % 2 == 0 ? Author.owner : Author.opponent;
+
 				Boolean result = calculateMonteCarloWinningProbablitiy(
-						gameData.m_board.get(i), player);
-				if (player != gameData.playerCheckersSort) {
-					if (result) {
-						losses++;
-					} else {
-						winns++;
-					}
+						gameData.m_board.get(i), gameData.playerCheckersSort);
+
+				if (!result) {
+					losses++;
 				} else {
-					if (!result) {
-						losses++;
-					} else {
-						winns++;
-					}
+					winns++;
 				}
 			}
-			probabilities[i] = winns / losses;
+			if (losses != 0)
+				probabilities[i] = (double) winns / (double) (losses + winns);
+			else
+				probabilities[i] = 1;
+			System.out.println(probabilities[i]);
 		}
 		return probabilities;
 	}
@@ -88,6 +85,7 @@ public abstract class TD implements ITD {
 			CheckerModel[][] board, Author nextPlayer) {
 		Author player = nextPlayer;
 		Boolean ended = false;
+		int sim = 0;
 		while (!ended) {
 			// find possible moves
 			MovesFinder movesFinder = new MovesFinder(board, nextPlayer);
@@ -106,18 +104,23 @@ public abstract class TD implements ITD {
 				nextPlayer = Author.owner;
 
 			// choose random move (f'ckin Java)
+
 			int moveChoseen = random.nextInt(allPossibleMoves.size());
+
 			int element = 0;
 			Iterator<List<MoveMessage>> iterator = allPossibleMoves.iterator();
 			List<MoveMessage> choosenMove = null;
 			while (iterator.hasNext()) {
-				element++;
+
 				if (element == moveChoseen)
 					choosenMove = iterator.next();
 				else
 					iterator.next();
+				element++;
 			}
 			board = BoardUtils.performMoves(board, choosenMove);
+
+			sim++;
 		}
 		return true;
 	}

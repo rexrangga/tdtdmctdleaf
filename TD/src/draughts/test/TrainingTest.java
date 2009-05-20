@@ -30,19 +30,23 @@ public class TrainingTest {
 		int gamesCount = Integer.parseInt(args[2]);
 
 		if (args.length == 5 || args.length == 7)
-			trainedPlayer = PlayerUtils.loadPlayer(args[3], PlayerUtils.getKind(Integer.parseInt(args[4])));
+			trainedPlayer = PlayerUtils.loadPlayer(args[3], PlayerUtils
+					.getKind(Integer.parseInt(args[4])));
 		else
-			trainedPlayer = PlayerUtils.createRandomPlayer(PlayerKind.TD);
+			trainedPlayer = PlayerUtils.createRandomPlayer(PlayerKind.TDMC);
+
 		PlayerUtils.savePlayer(trainedPlayer, beforeVectorFilename);
 		ITD opponent = null;
 		if (args.length == 7)
-			trainedPlayer = PlayerUtils.loadPlayer(args[5], PlayerUtils.getKind(Integer.parseInt(args[6])));
+			trainedPlayer = PlayerUtils.loadPlayer(args[5], PlayerUtils
+					.getKind(Integer.parseInt(args[6])));
 		else
-			opponent = PlayerUtils.createRandomPlayer(PlayerKind.TD);
+			opponent = PlayerUtils.createRandomPlayer(PlayerKind.TDMC);
+
 		HeadlessTraining training = new HeadlessTraining();
 
 		File file = new File(historyFilename);
-		BufferedWriter out = new BufferedWriter(new FileWriter(file));		
+		BufferedWriter out = new BufferedWriter(new FileWriter(file));
 		training.train(trainedPlayer, opponent, gamesCount, out);
 		PlayerUtils.savePlayer(trainedPlayer, afterVectorFilename);
 		out.close();
