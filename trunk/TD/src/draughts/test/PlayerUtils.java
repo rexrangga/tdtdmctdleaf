@@ -11,6 +11,7 @@ import draughts.ITD;
 import draughts.TDLambda;
 import draughts.TDLeaf;
 import draughts.TDMC;
+import draughts.TDMCSimple;
 
 public class PlayerUtils {
 
@@ -22,34 +23,40 @@ public class PlayerUtils {
 	private static final double lambda = 0.9;
 
 	enum PlayerKind {
-		TD, TD_LEAF, TDMC;
+		TD, TD_LEAF, TDMC, TDMCSimple;
 	}
-	
+
 	public static PlayerKind getKind(int which) {
 		switch (which) {
 		case (0):
 			return PlayerKind.TD;
 		case (1):
 			return PlayerKind.TD_LEAF;
+		case (2):
+			return PlayerKind.TDMC;
 		}
-		return PlayerKind.TDMC;
+		return PlayerKind.TDMCSimple;
 	}
 
-	public static ITD loadPlayer(String filePath, PlayerKind kind) throws IOException {
+	public static ITD loadPlayer(String filePath, PlayerKind kind)
+			throws IOException {
 		BufferedReader in = null;
 		try {
 			in = new BufferedReader(new FileReader(filePath));
 			String line = in.readLine();
 			String[] tokens = line.split(" ");
 			if (tokens.length != 12) {
-				throw new IOException("wrong file format: expected 12 weights but got " + tokens.length);
+				throw new IOException(
+						"wrong file format: expected 12 weights but got "
+								+ tokens.length);
 			}
 			double[] weights = new double[12];
 			for (int i = 0; i < 12; i++) {
 				try {
 					weights[i] = Double.parseDouble(tokens[i]);
 				} catch (NumberFormatException e) {
-					throw new IOException("wrong file format: " + tokens[i] + " is not a valid double value");
+					throw new IOException("wrong file format: " + tokens[i]
+							+ " is not a valid double value");
 				}
 			}
 			switch (kind) {
@@ -59,8 +66,11 @@ public class PlayerUtils {
 				return new TDLeaf(weights, a, b, alpha, gamma, lambda);
 			case TDMC:
 				return new TDMC(weights, gamma, lambda, alpha, a, b);
+			case TDMCSimple:
+				return new TDMCSimple(weights, gamma, lambda, alpha, a, b);
 			default:
-				throw new IllegalArgumentException(kind + " is not a valid learining algorithm");
+				throw new IllegalArgumentException(kind
+						+ " is not a valid learining algorithm");
 			}
 		} finally {
 			if (in != null) {
@@ -82,12 +92,16 @@ public class PlayerUtils {
 			return new TDLeaf(weights, a, b, alpha, gamma, lambda);
 		case TDMC:
 			return new TDMC(weights, gamma, lambda, alpha, a, b);
+		case TDMCSimple:
+			return new TDMCSimple(weights, gamma, lambda, alpha, a, b);
 		default:
-			throw new IllegalArgumentException(kind + " is not a valid learining algorithm");
+			throw new IllegalArgumentException(kind
+					+ " is not a valid learining algorithm");
 		}
 	}
 
-	public static void savePlayer(ITD player, String filePath) throws IOException {
+	public static void savePlayer(ITD player, String filePath)
+			throws IOException {
 		BufferedWriter out = null;
 		try {
 			out = new BufferedWriter(new FileWriter(filePath));

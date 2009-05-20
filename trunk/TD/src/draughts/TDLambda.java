@@ -6,8 +6,9 @@ public class TDLambda extends TD {
 	private double gamma;
 	private double lambda;
 
-	public TDLambda(double[] initialWeights, double a, double b, double alphaLearningRate,
-			double gammaDiscountParameter, double lambdaDecayParameter) {
+	public TDLambda(double[] initialWeights, double a, double b,
+			double alphaLearningRate, double gammaDiscountParameter,
+			double lambdaDecayParameter) {
 		super(initialWeights, a, b);
 		this.alpha = alphaLearningRate;
 		this.gamma = gammaDiscountParameter;
@@ -18,7 +19,8 @@ public class TDLambda extends TD {
 	public void updateWeights(GameData gameData) {
 
 		for (int t = 0; t < gameData.evaluationFunctionFeatures.size() - 1; t++) {
-			double delta = gamma * gameData.statesEvaluations.get(t + 1) - gameData.statesEvaluations.get(t);
+			double delta = gamma * gameData.statesEvaluations.get(t + 1)
+					- gameData.statesEvaluations.get(t);
 			double[] eligibility = calculateEligibilityVector(gameData, t);
 			for (int i = 0; i < getWeights().length; i++) {
 				getWeights()[i] += alpha * delta * eligibility[i];
