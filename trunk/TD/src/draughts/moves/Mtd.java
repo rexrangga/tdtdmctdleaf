@@ -17,7 +17,7 @@ import draughts.Player;
 public class Mtd {
 
 	private static final int F = 0;
-	private static final int MAX_DEPTH = 5;
+	private static final int MAX_DEPTH = 1;
 
 	// private Checker[][] originalBoard;
 	private GameData gameData = new GameData();
