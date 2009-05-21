@@ -21,8 +21,9 @@ public class TDMCSimple extends TD {
 		double[] rewards = calculateMonteCarloWinningProbabilities(gameData,
 				simNumber);
 		for (int t = 0; t < gameData.evaluationFunctionFeatures.size() - 1; t++) {
-
-			double delta = (rewards[t] - 0.5) + gamma
+			double reward = (t == gameData.evaluationFunctionFeatures.size() - 2 ? 0
+					: rewards[t + 1] - rewards[t]);
+			double delta = (reward) + gamma
 					* gameData.statesEvaluations.get(t + 1)
 					- gameData.statesEvaluations.get(t);
 			double[] eligibility = calculateEligibilityVector(gameData, t);
