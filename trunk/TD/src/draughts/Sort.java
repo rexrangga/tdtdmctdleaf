@@ -8,30 +8,46 @@ public enum Sort {
 	/**
 	 *Oznacza białe pole puste.
 	 */
-	blankWhite,
+	blankWhite(0),
 
 	/**
 	 * Oznacza czarne pole puste.
 	 */
-	blankBlack,
+	blankBlack(1),
 
 	/**
 	 * Oznacza pionek czarny.
 	 */
-	fullBlack,
+	fullBlack(2),
 
 	/**
 	 * Oznacza pionek biały.
 	 */
-	fullWhite,
+	fullWhite(3),
 
 	/**
 	 * Oznacza czarną damę.
 	 */
-	queenBlack,
+	queenBlack(4),
 
 	/**
 	 * Oznacza białą damę.
 	 */
-	queenWhite;
+	queenWhite(5);
+
+	private int which;
+	private static Sort[] sorts = { Sort.blankWhite, Sort.blankBlack, Sort.fullBlack, Sort.fullWhite,
+			Sort.queenBlack, Sort.queenWhite };
+
+	private Sort(int k) {
+		which = k;
+	}
+
+	public int getWhich() {
+		return which;
+	}
+
+	public static Sort getSort(int k) {
+		return sorts[k];
+	}
 }
