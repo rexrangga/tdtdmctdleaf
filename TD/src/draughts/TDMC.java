@@ -34,6 +34,9 @@ public class TDMC extends TD {
 		System.out.println("Ev:" + gameData.evaluationFunctionFeatures.size());
 		double[] rewards = calculateMonteCarloWinningProbabilities(gameData,
 				simNumber);
+		// for (int k = rewards.length - 1; k > 0; k--) {
+		// rewards[k] = -rewards[k - 1] + rewards[k];
+		// }
 		printDoubleTable(rewards);
 		System.out.println("3");
 		double[] Rt = computeReturn(rewards);
@@ -69,7 +72,7 @@ public class TDMC extends TD {
 		for (int i = 0; i < values.length; i++) {
 			text += String.valueOf((values[i])) + " ";
 		}
-		System.out.println(text);
+		// System.out.println(text);
 	}
 
 	/**
@@ -102,8 +105,9 @@ public class TDMC extends TD {
 		for (int i = 0; i < rewards.length; i++) {
 			// for t, t+1, t+2 .... t+n - build and fill table for different
 			// values of n = (t;T)
-			Rn[i] = new double[rewards.length - i];
-			for (int j = 0; j < Rn[i].length; j++) {
+			Rn[i] = new double[rewards.length - i - 1];
+			for (int j = 1; j < rewards.length - i; j++) {
+
 				double value = 0.0;
 				// for given value of n calculate sum
 				for (int k = 0; k < j; k++) {
@@ -111,8 +115,10 @@ public class TDMC extends TD {
 							* rewards[k + i];
 				}
 				value += Math.pow(lambdaEligibilityRate, (j))
-						* evaluationFunctionValues[j];
-				Rn[i][j] = value;
+						* evaluationFunctionValues[j + i];
+				Rn[i][j - 1] = value;
+				// System.out.println("RN, n=" + j + "time moment, t=" + i);
+				printDoubleTable(Rn[i]);
 			}
 		}
 		return Rn;
@@ -131,7 +137,7 @@ public class TDMC extends TD {
 		double[] RtLambda = new double[Rt.length];
 		for (int i = 0; i < RtLambda.length; i++) {
 			double value = 0.0;
-			for (int j = 0; j < Rt.length - i; j++) {
+			for (int j = 0; j < Rt.length - i - 1; j++) {
 				value += Math.pow(lambdaEligibilityRate, j) * Rn[i][j];
 			}
 			value += Math.pow(lambdaEligibilityRate, Rt.length - i) * Rt[i];
@@ -146,16 +152,25 @@ public class TDMC extends TD {
 	private void updateWeights(double[] RTLambda,
 			double[][] evaluationFunctionGradient,
 			double[] evluationFunctionValues) {
-		System.out.println("Starting updating weights -TDMC");
+		// System.out.println("Starting updating weights -TDMC");
 		for (int i = 0; i < getWeights().length; i++) {
 			double value = 0.0;
 			for (int j = 0; j < RTLambda.length; j++) {
+				if (i == 0) {
+					System.out.println("Value:" + RTLambda[j] + " "
+							+ evluationFunctionValues[j]);
+					System.out
+							.println((RTLambda[j] - evluationFunctionValues[j])
+									* evaluationFunctionGradient[j][i]);
+				}
 				value += (RTLambda[j] - evluationFunctionValues[j])
 						* evaluationFunctionGradient[j][i];
 			}
+			System.out.println("Value:" + value);
+
 			getWeights()[i] = getWeights()[i] + alfaLearningRate * value;
 		}
-		System.out.println("LEarning ended - TDMC weights updated");
+		// System.out.println("LEarning ended - TDMC weights updated");
 	}
 
 	@Override

@@ -65,7 +65,7 @@ public class PlayerUtils {
 			case TD_LEAF:
 				return new TDLeaf(weights, a, b, alpha, gamma, lambda);
 			case TDMC:
-				return new TDMC(weights, gamma, lambda, alpha, a, b);
+				return new TDMC(weights, gamma, 0.5, 0.0005, a, b);
 			case TDMCSimple:
 				return new TDMCSimple(weights, gamma, lambda, alpha, a, b);
 			default:
