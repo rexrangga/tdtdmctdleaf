@@ -52,7 +52,8 @@ public class Mtd {
 		CheckerModel[][] bestVariation = null;
 		double bestValue = Double.NEGATIVE_INFINITY;
 		for (List<MoveMessage> move : legalMoves) {
-			Pair<Double, CheckerModel[][]> p = evaluate(board, f, maxDepth, me, td);
+			CheckerModel[][] copy = BoardUtils.performMoves(board, move);
+			Pair<Double, CheckerModel[][]> p = evaluate(copy, f, maxDepth, me, td);
 			double currentValue = p.getFirst();
 			if (currentValue > bestValue) {
 				bestMove = move;
@@ -84,7 +85,7 @@ public class Mtd {
 				beta = g;
 			}
 			Node node = new Node(board);
-			Pair<Double, CheckerModel[][]> p = alphaBetaWithMemory.evaluate(node, beta - 1, beta, maxDepth, true, me,
+			Pair<Double, CheckerModel[][]> p = alphaBetaWithMemory.evaluate(node, beta - 1, beta, maxDepth, false, me,
 					td);
 			g = p.getFirst();
 			principalVariation = p.getSecond();
