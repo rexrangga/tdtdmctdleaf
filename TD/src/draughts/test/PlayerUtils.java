@@ -11,7 +11,6 @@ import draughts.ITD;
 import draughts.TDLambda;
 import draughts.TDLeaf;
 import draughts.TDMC;
-import draughts.TDMCSimple;
 
 public class PlayerUtils {
 
@@ -47,7 +46,7 @@ public class PlayerUtils {
 			String[] tokens = line.split(" ");
 			if (tokens.length != 12) {
 				throw new IOException(
-						"wrong file format: expected 12 weights but got "
+						"wrong file format: expected 8 weights but got "
 								+ tokens.length);
 			}
 			double[] weights = new double[12];
@@ -61,13 +60,13 @@ public class PlayerUtils {
 			}
 			switch (kind) {
 			case TD:
-				return new TDLambda(weights, a, b, alpha, gamma, lambda);
+				return new TDLambda(weights, a, b, alpha, gamma, lambda, false);
 			case TD_LEAF:
 				return new TDLeaf(weights, a, b, alpha, gamma, lambda);
 			case TDMC:
-				return new TDMC(weights, gamma, 0.5, 0.0005, a, b);
+				return new TDMC(weights, gamma, 0.8, 0.0000001, a, b);
 			case TDMCSimple:
-				return new TDMCSimple(weights, gamma, lambda, alpha, a, b);
+				return new TDLambda(weights, a, b, alpha, gamma, lambda, true);
 			default:
 				throw new IllegalArgumentException(kind
 						+ " is not a valid learining algorithm");
@@ -87,13 +86,13 @@ public class PlayerUtils {
 		}
 		switch (kind) {
 		case TD:
-			return new TDLambda(weights, a, b, alpha, gamma, lambda);
+			return new TDLambda(weights, a, b, alpha, gamma, lambda, false);
 		case TD_LEAF:
 			return new TDLeaf(weights, a, b, alpha, gamma, lambda);
 		case TDMC:
 			return new TDMC(weights, gamma, lambda, alpha, a, b);
 		case TDMCSimple:
-			return new TDMCSimple(weights, gamma, lambda, alpha, a, b);
+			return new TDLambda(weights, a, b, alpha, gamma, lambda, true);
 		default:
 			throw new IllegalArgumentException(kind
 					+ " is not a valid learining algorithm");
