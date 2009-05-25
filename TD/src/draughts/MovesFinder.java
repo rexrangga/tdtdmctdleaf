@@ -94,8 +94,11 @@ public class MovesFinder {
 							MoveMessage mm = new MoveMessage(new CheckerModel(currChecker), new CheckerModel(beating),
 									author, false);
 							CheckerModel[][] copy = BoardUtils.performMoves(board, Arrays.asList(mm));
-							MovesFinder helper = new MovesFinder(copy, author);
-							Set<List<MoveMessage>> helpResult = helper.getMoves(false, true, strategy);
+							// MovesFinder helper = new MovesFinder(copy, author);
+							// Set<List<MoveMessage>> helpResult = helper.getMoves(false, true, strategy);
+							CheckerModel checkerAfterMove = new CheckerModel(beating.getI(), beating.getJ(),
+									currChecker.getKind());
+							Set<List<MoveMessage>> helpResult = getBeatingsForChecker(strategy, copy, checkerAfterMove);
 							if (helpResult == null || helpResult.isEmpty()) {
 								mm.setEndsTurn(true);
 								List<MoveMessage> newResult = new ArrayList<MoveMessage>(1);
@@ -112,6 +115,37 @@ public class MovesFinder {
 								}
 							}
 						}
+					}
+				}
+			}
+		}
+		return result;
+	}
+
+	private Set<List<MoveMessage>> getBeatingsForChecker(UpdateResultSetStrategy strategy, CheckerModel[][] board,
+			CheckerModel checker) {
+		int maxLength = 0;
+		Set<List<MoveMessage>> result = new HashSet<List<MoveMessage>>();
+		List<CheckerModel> beatings = checkBeating(checker, board);
+		if (beatings != null && !beatings.isEmpty()) {
+			for (CheckerModel beating : beatings) {
+				MoveMessage mm = new MoveMessage(new CheckerModel(checker), new CheckerModel(beating), author, false);
+				CheckerModel[][] copy = BoardUtils.performMoves(board, Arrays.asList(mm));
+				CheckerModel checkerAfterMove = new CheckerModel(beating.getI(), beating.getJ(), checker.getKind());
+				Set<List<MoveMessage>> helpResult = getBeatingsForChecker(strategy, copy, checkerAfterMove);
+				if (helpResult == null || helpResult.isEmpty()) {
+					mm.setEndsTurn(true);
+					List<MoveMessage> newResult = new ArrayList<MoveMessage>(1);
+					newResult.add(mm);
+					maxLength = strategy.updateResult(result, maxLength, newResult);
+				} else {
+					for (List<MoveMessage> list : helpResult) {
+						List<MoveMessage> newResult = new ArrayList<MoveMessage>(list.size() + 1);
+						MoveMessage newMessage = new MoveMessage(new CheckerModel(mm.getFirst()), new CheckerModel(
+								mm.getSecond()), mm.getMAuthor(), mm.isEndsTurn());
+						newResult.add(newMessage);
+						newResult.addAll(list);
+						maxLength = strategy.updateResult(result, maxLength, newResult);
 					}
 				}
 			}
@@ -142,7 +176,8 @@ public class MovesFinder {
 			// we found a longer result (longer beating sequence)
 			results.clear();
 			results.add(newResult);
-			return results.size();
+			// return results.size();
+			return newResult.size();
 		}
 	}
 

@@ -7,7 +7,6 @@ import java.util.Set;
 import org.junit.Assert;
 
 import draughts.Author;
-import draughts.Checker;
 import draughts.CheckerModel;
 import draughts.MoveMessage;
 import draughts.MovesFinder;
@@ -22,12 +21,12 @@ public class MovesFinderTest {
 		for (int i = 0; i < BOARD_SIZE; i++) {
 			CheckerModel[] temp = new CheckerModel[BOARD_SIZE];
 			for (int j = 0; j < BOARD_SIZE; j++) {
-				temp[j] = new CheckerModel(i, j, null);
-				if ((i + j) % 2 != 0) {
-					temp[j].setKind(Sort.blankBlack);
-				} else {
-					temp[j].setKind(Sort.blankWhite);
-				}
+				// temp[j] = null;
+				// if ((i + j) % 2 != 0) {
+				// temp[j].setKind(Sort.blankBlack);
+				// } else {
+				// temp[j].setKind(Sort.blankWhite);
+				// }
 			}
 			board[i] = temp;
 		}
@@ -46,7 +45,7 @@ public class MovesFinderTest {
 	 */
 	private static void testSimple() {
 		CheckerModel[][] board = createEmptyBoard();
-		board[9][0].setKind(Sort.fullWhite);
+		board[9][0] = new CheckerModel(9, 0, Sort.fullWhite);
 		Set<List<MoveMessage>> s = new MovesFinder(board, Author.owner).getLegalMoves();
 		Assert.assertNotNull(s);
 		Assert.assertTrue(s.size() == 1);
@@ -63,7 +62,7 @@ public class MovesFinderTest {
 
 	private static void testSimple2() {
 		CheckerModel[][] board = createEmptyBoard();
-		board[9][2].setKind(Sort.fullWhite);
+		board[9][2] = new CheckerModel(9, 2, Sort.fullWhite);
 		Set<List<MoveMessage>> s = new MovesFinder(board, Author.owner).getLegalMoves();
 		Assert.assertNotNull(s);
 		Assert.assertTrue(s.size() == 2);
@@ -79,8 +78,8 @@ public class MovesFinderTest {
 
 	private static void testBeating() {
 		CheckerModel[][] board = createEmptyBoard();
-		board[9][2].setKind(Sort.fullWhite);
-		board[8][3].setKind(Sort.fullBlack);
+		board[9][2] = new CheckerModel(9, 2, Sort.fullWhite);
+		board[8][3] = new CheckerModel(8, 3, Sort.fullBlack);
 		Set<List<MoveMessage>> s = new MovesFinder(board, Author.owner).getLegalMoves();
 		Assert.assertNotNull(s);
 		Assert.assertTrue(s.size() == 1);
@@ -98,10 +97,39 @@ public class MovesFinderTest {
 
 	private static void testTwoBeatings() {
 		CheckerModel[][] board = createEmptyBoard();
-		board[9][2].setKind(Sort.fullWhite);
-		board[8][3].setKind(Sort.fullBlack);
-		board[8][1].setKind(Sort.fullBlack);
-		board[6][5].setKind(Sort.fullBlack);
+		board[9][2] = new CheckerModel(9, 2, Sort.fullWhite);
+		board[8][3] = new CheckerModel(8, 3, Sort.fullBlack);
+		board[8][1] = new CheckerModel(8, 1, Sort.fullBlack);
+		board[6][5] = new CheckerModel(6, 5, Sort.fullBlack);
+		Set<List<MoveMessage>> s = new MovesFinder(board, Author.owner).getLegalMoves();
+		Assert.assertNotNull(s);
+		Assert.assertTrue(s.size() == 1);
+		Iterator<List<MoveMessage>> it = s.iterator();
+		List<MoveMessage> list = it.next();
+		Assert.assertNotNull(list);
+		Assert.assertTrue(list.size() == 2);
+		MoveMessage mm = list.get(0);
+		Assert.assertEquals(9, mm.getFirst().getI());
+		Assert.assertEquals(2, mm.getFirst().getJ());
+		Assert.assertEquals(7, mm.getSecond().getI());
+		Assert.assertEquals(4, mm.getSecond().getJ());
+		mm = list.get(1);
+		Assert.assertEquals(7, mm.getFirst().getI());
+		Assert.assertEquals(4, mm.getFirst().getJ());
+		Assert.assertEquals(5, mm.getSecond().getI());
+		Assert.assertEquals(6, mm.getSecond().getJ());
+		System.out.println("+ success");
+	}
+
+	private static void testThreeBeatings() {
+		CheckerModel[][] board = createEmptyBoard();
+		board[9][2] = new CheckerModel(9, 2, Sort.fullWhite);
+		board[8][3] = new CheckerModel(8, 3, Sort.fullBlack);
+		board[8][1] = new CheckerModel(8, 1, Sort.fullBlack);
+		board[6][5] = new CheckerModel(6, 5, Sort.fullBlack);
+
+		board[9][8] = new CheckerModel(6, 1, Sort.fullWhite);
+		board[8][7] = new CheckerModel(5, 2, Sort.fullBlack);
 		Set<List<MoveMessage>> s = new MovesFinder(board, Author.owner).getLegalMoves();
 		Assert.assertNotNull(s);
 		Assert.assertTrue(s.size() == 1);
@@ -128,5 +156,6 @@ public class MovesFinderTest {
 		testSimple2();
 		testBeating();
 		testTwoBeatings();
+		testThreeBeatings();
 	}
 }
