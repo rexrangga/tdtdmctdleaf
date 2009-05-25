@@ -56,7 +56,7 @@ public class Frame extends javax.swing.JFrame {
 	}
 
 	private void chooseTD() {
-		itd = new TDLambda(weights, 1, 1, 0, 0, 0);
+		itd = new TDLambda(weights, 1, 1, 0, 0, 0, true);
 	}
 
 	// <editor-fold defaultstate="collapsed"
@@ -150,92 +150,73 @@ public class Frame extends javax.swing.JFrame {
 				javax.swing.GroupLayout.Alignment.LEADING).addGroup(
 				javax.swing.GroupLayout.Alignment.TRAILING,
 				backgroundPanel1Layout.createSequentialGroup().addContainerGap().addGroup(
-						backgroundPanel1Layout
-								.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-								.addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING,
-										javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE).addGroup(
-										javax.swing.GroupLayout.Alignment.LEADING,
-										backgroundPanel1Layout.createSequentialGroup().addComponent(
-												messageField, javax.swing.GroupLayout.PREFERRED_SIZE, 321,
-												javax.swing.GroupLayout.PREFERRED_SIZE).addGap(18, 18, 18)
-												.addComponent(jButton4,
-														javax.swing.GroupLayout.PREFERRED_SIZE, 50,
-														javax.swing.GroupLayout.PREFERRED_SIZE))).addGap(137,
-						137, 137).addGroup(
-						backgroundPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-								.addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 122,
-										javax.swing.GroupLayout.PREFERRED_SIZE).addComponent(jButton3,
-										javax.swing.GroupLayout.PREFERRED_SIZE, 68,
-										javax.swing.GroupLayout.PREFERRED_SIZE)).addGap(80, 80, 80))
-				.addGroup(
-						backgroundPanel1Layout.createSequentialGroup().addGap(68, 68, 68).addComponent(
-								boardPanel1, javax.swing.GroupLayout.PREFERRED_SIZE,
-								javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-								.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 135,
-										Short.MAX_VALUE).addComponent(jButton5,
-										javax.swing.GroupLayout.PREFERRED_SIZE, 116,
-										javax.swing.GroupLayout.PREFERRED_SIZE).addGap(110, 110, 110)));
+						backgroundPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING).addComponent(
+								jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING,
+								javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE).addGroup(
+								javax.swing.GroupLayout.Alignment.LEADING,
+								backgroundPanel1Layout.createSequentialGroup().addComponent(messageField,
+										javax.swing.GroupLayout.PREFERRED_SIZE, 321,
+										javax.swing.GroupLayout.PREFERRED_SIZE).addGap(18, 18, 18).addComponent(
+										jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 50,
+										javax.swing.GroupLayout.PREFERRED_SIZE))).addGap(137, 137, 137).addGroup(
+						backgroundPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addComponent(
+								jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 122,
+								javax.swing.GroupLayout.PREFERRED_SIZE).addComponent(jButton3,
+								javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)).addGap(
+						80, 80, 80)).addGroup(
+				backgroundPanel1Layout.createSequentialGroup().addGap(68, 68, 68).addComponent(boardPanel1,
+						javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE,
+						javax.swing.GroupLayout.PREFERRED_SIZE).addPreferredGap(
+						javax.swing.LayoutStyle.ComponentPlacement.RELATED, 135, Short.MAX_VALUE).addComponent(
+						jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE).addGap(
+						110, 110, 110)));
 		backgroundPanel1Layout.setVerticalGroup(backgroundPanel1Layout.createParallelGroup(
 				javax.swing.GroupLayout.Alignment.LEADING).addGroup(
 				javax.swing.GroupLayout.Alignment.TRAILING,
 				backgroundPanel1Layout.createSequentialGroup().addGroup(
-						backgroundPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-								.addGroup(
-										backgroundPanel1Layout.createSequentialGroup().addGap(81, 81, 81)
-												.addComponent(boardPanel1,
-														javax.swing.GroupLayout.PREFERRED_SIZE,
-														javax.swing.GroupLayout.DEFAULT_SIZE,
-														javax.swing.GroupLayout.PREFERRED_SIZE)
-												.addPreferredGap(
-														javax.swing.LayoutStyle.ComponentPlacement.RELATED,
-														53, Short.MAX_VALUE)).addGroup(
-										javax.swing.GroupLayout.Alignment.TRAILING,
-										backgroundPanel1Layout.createSequentialGroup().addContainerGap()
-												.addComponent(jButton5,
-														javax.swing.GroupLayout.PREFERRED_SIZE, 33,
-														javax.swing.GroupLayout.PREFERRED_SIZE).addGap(36,
-														36, 36))).addGroup(
-						backgroundPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-								.addGroup(
-										javax.swing.GroupLayout.Alignment.TRAILING,
-										backgroundPanel1Layout.createSequentialGroup().addComponent(jButton2,
-												javax.swing.GroupLayout.PREFERRED_SIZE, 22,
-												javax.swing.GroupLayout.PREFERRED_SIZE).addPreferredGap(
-												javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-												.addComponent(jButton3,
-														javax.swing.GroupLayout.PREFERRED_SIZE, 22,
-														javax.swing.GroupLayout.PREFERRED_SIZE).addGap(20,
-														20, 20)).addGroup(
-										javax.swing.GroupLayout.Alignment.TRAILING,
-										backgroundPanel1Layout.createSequentialGroup().addComponent(
-												jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 59,
-												javax.swing.GroupLayout.PREFERRED_SIZE).addPreferredGap(
-												javax.swing.LayoutStyle.ComponentPlacement.RELATED).addGroup(
-												backgroundPanel1Layout.createParallelGroup(
-														javax.swing.GroupLayout.Alignment.TRAILING)
-														.addComponent(messageField,
-																javax.swing.GroupLayout.PREFERRED_SIZE, 19,
-																javax.swing.GroupLayout.PREFERRED_SIZE)
-														.addComponent(jButton4,
-																javax.swing.GroupLayout.PREFERRED_SIZE, 20,
-																javax.swing.GroupLayout.PREFERRED_SIZE))
-												.addContainerGap()))));
+						backgroundPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(
+								backgroundPanel1Layout.createSequentialGroup().addGap(81, 81, 81).addComponent(
+										boardPanel1, javax.swing.GroupLayout.PREFERRED_SIZE,
+										javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE).addPreferredGap(
+										javax.swing.LayoutStyle.ComponentPlacement.RELATED, 53, Short.MAX_VALUE)).addGroup(
+								javax.swing.GroupLayout.Alignment.TRAILING,
+								backgroundPanel1Layout.createSequentialGroup().addContainerGap().addComponent(jButton5,
+										javax.swing.GroupLayout.PREFERRED_SIZE, 33,
+										javax.swing.GroupLayout.PREFERRED_SIZE).addGap(36, 36, 36))).addGroup(
+						backgroundPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(
+								javax.swing.GroupLayout.Alignment.TRAILING,
+								backgroundPanel1Layout.createSequentialGroup().addComponent(jButton2,
+										javax.swing.GroupLayout.PREFERRED_SIZE, 22,
+										javax.swing.GroupLayout.PREFERRED_SIZE).addPreferredGap(
+										javax.swing.LayoutStyle.ComponentPlacement.RELATED).addComponent(jButton3,
+										javax.swing.GroupLayout.PREFERRED_SIZE, 22,
+										javax.swing.GroupLayout.PREFERRED_SIZE).addGap(20, 20, 20)).addGroup(
+								javax.swing.GroupLayout.Alignment.TRAILING,
+								backgroundPanel1Layout.createSequentialGroup().addComponent(jScrollPane1,
+										javax.swing.GroupLayout.PREFERRED_SIZE, 59,
+										javax.swing.GroupLayout.PREFERRED_SIZE).addPreferredGap(
+										javax.swing.LayoutStyle.ComponentPlacement.RELATED).addGroup(
+										backgroundPanel1Layout.createParallelGroup(
+												javax.swing.GroupLayout.Alignment.TRAILING).addComponent(messageField,
+												javax.swing.GroupLayout.PREFERRED_SIZE, 19,
+												javax.swing.GroupLayout.PREFERRED_SIZE).addComponent(jButton4,
+												javax.swing.GroupLayout.PREFERRED_SIZE, 20,
+												javax.swing.GroupLayout.PREFERRED_SIZE)).addContainerGap()))));
 
 		javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
 		getContentPane().setLayout(layout);
-		layout.setHorizontalGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-				.addComponent(backgroundPanel1, javax.swing.GroupLayout.DEFAULT_SIZE,
-						javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE));
-		layout.setVerticalGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-				.addComponent(backgroundPanel1, javax.swing.GroupLayout.DEFAULT_SIZE,
-						javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE));
+		layout.setHorizontalGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addComponent(
+				backgroundPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE,
+				Short.MAX_VALUE));
+		layout.setVerticalGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addComponent(
+				backgroundPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE,
+				Short.MAX_VALUE));
 
 		pack();
 	}// </editor-fold>//GEN-END:initComponents
 
 	/**
-	 * Tworzy wątek czekający na połączenie. Gdy połączenie zostaje nawiązane
-	 * rozpoczyna przesyłanie danych.
+	 * Tworzy wątek czekający na połączenie. Gdy połączenie zostaje nawiązane rozpoczyna przesyłanie danych.
 	 * 
 	 * @see Frame#begin()
 	 */
@@ -324,10 +305,8 @@ public class Frame extends javax.swing.JFrame {
 
 			boardPanel1.getCheckersArray()[first.getI()][first.getJ()].setKind(first.getKind());
 			boardPanel1.getCheckersArray()[second.getI()][second.getJ()].setKind(second.getKind());
-			boardPanel1.setCheckerIcon(boardPanel1.getCheckersArray()[first.getI()][first.getJ()], first
-					.getKind());
-			boardPanel1.setCheckerIcon(boardPanel1.getCheckersArray()[second.getI()][second.getJ()], second
-					.getKind());
+			boardPanel1.setCheckerIcon(boardPanel1.getCheckersArray()[first.getI()][first.getJ()], first.getKind());
+			boardPanel1.setCheckerIcon(boardPanel1.getCheckersArray()[second.getI()][second.getJ()], second.getKind());
 
 			boardPanel1.deleteIfBeaten(second, first);
 			if (!gameIsOn) {
@@ -338,8 +317,7 @@ public class Frame extends javax.swing.JFrame {
 				chatArea.append("\nTwój ruch...");
 				chatArea.setCaretPosition(chatArea.getDocument().getLength());
 				if (artificialGame) {
-					boardPanel1.makeMoves(mtd.getBestMoveDefault(boardPanel1.getCheckersArray(), myPlayer,
-							itd));
+					boardPanel1.makeMoves(mtd.getBestMoveDefault(boardPanel1.getCheckersArray(), myPlayer, itd));
 				}
 			}
 		}
@@ -460,8 +438,8 @@ public class Frame extends javax.swing.JFrame {
 
 	private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jButton5ActionPerformed
 		if (gameIsOn) {
-			JOptionPane.showMessageDialog(null, "W trakcie rozgrywki nie możesz rozpocząć nowej gry",
-					"Uwaga", JOptionPane.INFORMATION_MESSAGE);
+			JOptionPane.showMessageDialog(null, "W trakcie rozgrywki nie możesz rozpocząć nowej gry", "Uwaga",
+					JOptionPane.INFORMATION_MESSAGE);
 		} else if (socket != null && socket.isBound() && !myOpponent.getName().equals("")) {
 			startGame();
 		}
