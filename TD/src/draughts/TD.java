@@ -34,7 +34,7 @@ public abstract class TD implements ITD {
 		for (int i = 0; i < getWeights().length; i++) {
 			sum += features[i] * getWeights()[i];
 		}
-		return a * Math.tanh(b * sum);
+		return sum;
 	}
 
 	/**
@@ -53,6 +53,14 @@ public abstract class TD implements ITD {
 		return functionValues;
 	}
 
+	/**
+	 * Simulates game for every time moment, and returns probability of winning
+	 * for the player in each situation on the board.
+	 * 
+	 * @param gameData
+	 * @param simulationsNumber
+	 * @return
+	 */
 	protected double[] calculateMonteCarloWinningProbabilities(
 			GameData gameData, int simulationsNumber) {
 		// TODO napisa� kod symulacji MonteCarlo
@@ -76,7 +84,6 @@ public abstract class TD implements ITD {
 				probabilities[i] = (double) winns / (double) (losses + winns);
 			else
 				probabilities[i] = 1;
-			System.out.println(probabilities[i]);
 		}
 		return probabilities;
 	}
