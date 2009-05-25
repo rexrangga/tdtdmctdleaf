@@ -8,14 +8,25 @@ import draughts.test.PlayerUtils.PlayerKind;
 
 public class HeadlessTraining {
 
-	public void train(ITD trainedPlayer, int numGames, BufferedWriter out) throws IOException {
+	public interface OpponentCreateStrategy {
+		ITD getOpponent();
+	}
+
+	public static final OpponentCreateStrategy RANDOM_OPPONENT = new OpponentCreateStrategy() {
+		public ITD getOpponent() {
+			return PlayerUtils.createRandomPlayer(PlayerKind.TD);
+		}
+	};
+
+	public void train(ITD trainedPlayer, int numGames, BufferedWriter out, OpponentCreateStrategy strategy)
+			throws IOException {
 		HeadlessGame headlessGame = new HeadlessGame();
 
 		int trainedPlayerWinsCounter = 0;
 		int drawCounter = 0;
 
 		for (int i = 0; i < numGames; i++) {
-			ITD opponent = PlayerUtils.createRandomPlayer(PlayerKind.TD);
+			ITD opponent = strategy.getOpponent();
 			ITD whitePlayer = null, blackPlayer = null;
 			boolean trainingWhite = false;
 			if (i % 2 == 0) {
@@ -48,6 +59,11 @@ public class HeadlessTraining {
 
 		out.write("\nGracz uczacy sie wygral " + trainedPlayerWinsCounter + " i zremisowal " + drawCounter + " z "
 				+ numGames + " gier.");
+
+	}
+
+	public void train(ITD trainedPlayer, int numGames, BufferedWriter out) throws IOException {
+		train(trainedPlayer, numGames, out, RANDOM_OPPONENT);
 	}
 
 	/**

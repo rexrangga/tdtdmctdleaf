@@ -53,7 +53,7 @@ public class HeadlessGame {
 		boolean draw = false;
 		int noBeatingsCount = 0;
 		while (!finished) {
-			List<MoveMessage> list = whiteMtd.getBestMove(board, 0, 0, white, whitePlayer);
+			List<MoveMessage> list = whiteMtd.getBestMove(board, 0, 2, white, whitePlayer);
 			if (list == null) {
 				finished = true;
 				whiteWins = false;
@@ -68,7 +68,7 @@ public class HeadlessGame {
 				board = BoardUtils.performMoves(board, list);
 			}
 			if (!finished) {
-				list = blackMtd.getBestMove(board, 0, 0, black, blackPlayer);
+				list = blackMtd.getBestMove(board, 0, 2, black, blackPlayer);
 				if (list == null) {
 					finished = true;
 					whiteWins = true;

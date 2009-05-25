@@ -6,6 +6,7 @@ import java.io.FileWriter;
 import java.util.concurrent.TimeUnit;
 
 import draughts.ITD;
+import draughts.test.HeadlessTraining.OpponentCreateStrategy;
 import draughts.test.PlayerUtils.PlayerKind;
 
 public class TrainingTest {
@@ -21,8 +22,7 @@ public class TrainingTest {
 		}
 		ITD trainedPlayer = null;
 		if (args.length != 3 && args.length != 5 && args.length != 7) {
-			System.out
-					.println("USAGE: ... beforeVectorFilename afterVectorFilename gamesCount [learningPlayerFilename learningPlayerMethod{0,1,2} [opponentPlayerFilename opponentPlayerMethod{0,1,2}]]");
+			System.out.println("USAGE: ... beforeVectorFilename afterVectorFilename gamesCount [learningPlayerFilename learningPlayerMethod{0,1,2} [opponentPlayerFilename opponentPlayerMethod{0,1,2}]]");
 			return;
 		}
 		String beforeVectorFilename = args[0];
@@ -30,26 +30,36 @@ public class TrainingTest {
 		int gamesCount = Integer.parseInt(args[2]);
 
 		if (args.length == 5 || args.length == 7)
-			trainedPlayer = PlayerUtils.loadPlayer(args[3], PlayerUtils
-					.getKind(Integer.parseInt(args[4])));
+			trainedPlayer = PlayerUtils.loadPlayer(args[3], PlayerUtils.getKind(Integer.parseInt(args[4])));
 		else
 			trainedPlayer = PlayerUtils.createRandomPlayer(PlayerKind.TDMC);
 
 		PlayerUtils.savePlayer(trainedPlayer, beforeVectorFilename);
-		ITD opponent = null;
-		if (args.length == 7)
-			trainedPlayer = PlayerUtils.loadPlayer(args[5], PlayerUtils
-					.getKind(Integer.parseInt(args[6])));
-		else
-			opponent = PlayerUtils.createRandomPlayer(PlayerKind.TDMC);
+		// ITD opponent = null;
+		// if (args.length == 7)
+		// trainedPlayer = PlayerUtils.loadPlayer(args[5], PlayerUtils
+		// .getKind(Integer.parseInt(args[6])));
+		// else
+		// opponent = PlayerUtils.createRandomPlayer(PlayerKind.TDMC);
+
+		OpponentCreateStrategy strategy = null;
+		if (args.length == 7) {
+			final ITD opponent = PlayerUtils.loadPlayer(args[5], PlayerUtils.getKind(Integer.parseInt(args[6])));
+			strategy = new OpponentCreateStrategy() {
+				public ITD getOpponent() {
+					return opponent;
+				}
+			};
+		} else {
+			strategy = HeadlessTraining.RANDOM_OPPONENT;
+		}
 
 		HeadlessTraining training = new HeadlessTraining();
 
 		File file = new File(historyFilename);
 		BufferedWriter out = new BufferedWriter(new FileWriter(file));
-		training.train(trainedPlayer, opponent, gamesCount, out);
+		training.train(trainedPlayer, gamesCount, out, strategy);
 		PlayerUtils.savePlayer(trainedPlayer, afterVectorFilename);
 		out.close();
 	}
-
 }
