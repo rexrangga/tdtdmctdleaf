@@ -15,8 +15,10 @@ public class TrainingTest {
 	private double alpha, gamma, lambda;
 	private int gamesCount;
 	private String logFilePath;
-	private String firstPlayerFile;
-	private String secondPlayerFile;
+	// private String firstPlayerFile;
+	// private String secondPlayerFile;
+	private String firstPlayerOutFile;
+	private String secondPlayerOutFile;
 
 	public TrainingTest(String[] args) throws IOException {
 		depth = Integer.parseInt(args[0]);
@@ -28,23 +30,25 @@ public class TrainingTest {
 
 		ITD firstPlayer = null;
 
-		if (args.length > 7) {
+		if (args.length > 8) {
 			PlayerKind firstKind = PlayerUtils.getKind(Integer.parseInt(args[6]));
-			firstPlayer = PlayerUtils.loadPlayer(args[7], firstKind, alpha, gamma, lambda);
-			firstPlayerFile = args[7];
+			firstPlayer = PlayerUtils.loadPlayer(args[8], firstKind, alpha, gamma, lambda);
+			// firstPlayerFile = args[8];
+			firstPlayerOutFile = args[7];
 		} else {
 			PlayerKind firstKind = PlayerUtils.getKind(Integer.parseInt(args[6]));
 			firstPlayer = PlayerUtils.createRandomPlayer(firstKind, alpha, gamma, lambda);
-			firstPlayerFile = "learning" + System.currentTimeMillis() + ".txt";
+			firstPlayerOutFile = args[7];
 		}
 
 		OpponentCreateStrategy strategy = null;
 		boolean saveSecondPlayer = false;
 		ITD secondPlayer = null;
-		if (args.length > 9) {
-			secondPlayerFile = args[9];
-			PlayerKind secondKind = PlayerUtils.getKind(Integer.parseInt(args[8]));
-			secondPlayer = PlayerUtils.loadPlayer(args[9], secondKind, alpha, gamma, lambda);
+		if (args.length > 10) {
+			// secondPlayerFile = args[11];
+			secondPlayerOutFile = args[10];
+			PlayerKind secondKind = PlayerUtils.getKind(Integer.parseInt(args[9]));
+			secondPlayer = PlayerUtils.loadPlayer(args[11], secondKind, alpha, gamma, lambda);
 			final ITD p = secondPlayer;
 			strategy = new OpponentCreateStrategy() {
 				public ITD getOpponent() {
@@ -61,63 +65,14 @@ public class TrainingTest {
 		File file = new File(logFilePath);
 		BufferedWriter out = new BufferedWriter(new FileWriter(file));
 		training.train(firstPlayer, gamesCount, out, strategy, depth);
-		PlayerUtils.savePlayer(firstPlayer, firstPlayerFile.substring(0, firstPlayerFile.length() - 4) + "_after.txt");
+		PlayerUtils.savePlayer(firstPlayer, firstPlayerOutFile);
 		if (saveSecondPlayer) {
-			PlayerUtils.savePlayer(secondPlayer, secondPlayerFile.substring(0, secondPlayerFile.length() - 4)
-					+ "_after.txt");
+			PlayerUtils.savePlayer(secondPlayer, secondPlayerOutFile);
 		}
 		out.close();
 	}
 
 	public static void main(String[] args) throws Exception {
 		new TrainingTest(args);
-		// try {
-		// TimeUnit.MILLISECONDS.sleep(1000);
-		// } catch (InterruptedException e) {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// }
-
-		// ITD trainedPlayer = null;
-		// if (args.length != 3 && args.length != 5 && args.length != 7) {
-		// System.out.println("USAGE: ... beforeVectorFilename afterVectorFilename gamesCount [learningPlayerFilename learningPlayerMethod{0,1,2} [opponentPlayerFilename opponentPlayerMethod{0,1,2}]]");
-		// return;
-		// }
-		// String beforeVectorFilename = args[0];
-		// String afterVectorFilename = args[1];
-		// int gamesCount = Integer.parseInt(args[2]);
-		//
-		// if (args.length == 5 || args.length == 7)
-		// trainedPlayer = PlayerUtils.loadPlayer(args[3], PlayerUtils.getKind(Integer.parseInt(args[4])));
-		// else
-		// trainedPlayer = PlayerUtils.createRandomPlayer(PlayerKind.TDMC);
-		//
-		// PlayerUtils.savePlayer(trainedPlayer, beforeVectorFilename);
-		// // ITD opponent = null;
-		// // if (args.length == 7)
-		// // trainedPlayer = PlayerUtils.loadPlayer(args[5], PlayerUtils
-		// // .getKind(Integer.parseInt(args[6])));
-		// // else
-		// // opponent = PlayerUtils.createRandomPlayer(PlayerKind.TDMC);
-		//
-		// OpponentCreateStrategy strategy = null;
-		// if (args.length == 7) {
-		// final ITD opponent = PlayerUtils.loadPlayer(args[5], PlayerUtils.getKind(Integer.parseInt(args[6])));
-		// strategy = new OpponentCreateStrategy() {
-		// public ITD getOpponent() {
-		// return opponent;
-		// }
-		// };
-		// } else {
-		// strategy = HeadlessTraining.RANDOM_OPPONENT;
-		// }
-		//
-		// HeadlessTraining training = new HeadlessTraining();
-		//
-		// File file = new File(historyFilename);
-		// BufferedWriter out = new BufferedWriter(new FileWriter(file));
-		// training.train(trainedPlayer, gamesCount, out, strategy);
-		// PlayerUtils.savePlayer(trainedPlayer, afterVectorFilename);
-		// out.close();
 	}
 }
