@@ -14,11 +14,11 @@ public class HeadlessTraining {
 
 	public static final OpponentCreateStrategy RANDOM_OPPONENT = new OpponentCreateStrategy() {
 		public ITD getOpponent() {
-			return PlayerUtils.createRandomPlayer(PlayerKind.TD);
+			return PlayerUtils.createRandomPlayer(PlayerKind.NO_LEARNING);
 		}
 	};
 
-	public void train(ITD trainedPlayer, int numGames, BufferedWriter out, OpponentCreateStrategy strategy)
+	public void train(ITD trainedPlayer, int numGames, BufferedWriter out, OpponentCreateStrategy strategy, int depth)
 			throws IOException {
 		HeadlessGame headlessGame = new HeadlessGame();
 
@@ -38,7 +38,7 @@ public class HeadlessTraining {
 				whitePlayer = opponent;
 				blackPlayer = trainedPlayer;
 			}
-			Boolean whiteWins = headlessGame.playGame(whitePlayer, blackPlayer, trainingWhite, i);
+			Boolean whiteWins = headlessGame.playGame(whitePlayer, blackPlayer, trainingWhite, i, depth);
 			if (whiteWins == null) {
 				out.write("\nPartia nr " + i + " zakonczona remisem.");
 				drawCounter++;
@@ -62,22 +62,7 @@ public class HeadlessTraining {
 
 	}
 
-	public void train(ITD trainedPlayer, int numGames, BufferedWriter out) throws IOException {
-		train(trainedPlayer, numGames, out, RANDOM_OPPONENT);
-	}
-
-	/**
-	 * Parameter <code>opponent</code> is ignored. Use method
-	 * <code>train(ITD trainedPlayer, int numGames, BufferedWriter out)</code> instead.
-	 * 
-	 * @param trainedPlayer
-	 * @param opponent
-	 * @param numGames
-	 * @param out
-	 * @throws Exception
-	 */
-	@Deprecated
-	public void train(ITD trainedPlayer, ITD opponent, int numGames, BufferedWriter out) throws Exception {
-		train(trainedPlayer, numGames, out);
+	public void train(ITD trainedPlayer, int numGames, BufferedWriter out, int depth) throws IOException {
+		train(trainedPlayer, numGames, out, RANDOM_OPPONENT, depth);
 	}
 }

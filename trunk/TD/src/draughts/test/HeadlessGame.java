@@ -39,7 +39,7 @@ public class HeadlessGame {
 		return checkersArray;
 	}
 
-	public Boolean playGame(ITD whitePlayer, ITD blackPlayer, boolean learningWhite, int i) {
+	public Boolean playGame(ITD whitePlayer, ITD blackPlayer, boolean learningWhite, int i, int depth) {
 		Checker[][] bboard = createStartingBoard();
 		CheckerModel[][] board = BoardUtils.fromChecker(bboard);
 
@@ -53,7 +53,7 @@ public class HeadlessGame {
 		boolean draw = false;
 		int noBeatingsCount = 0;
 		while (!finished) {
-			List<MoveMessage> list = whiteMtd.getBestMove(board, 0, 2, white, whitePlayer);
+			List<MoveMessage> list = whiteMtd.getBestMove(board, 0, depth, white, whitePlayer);
 			if (list == null) {
 				finished = true;
 				whiteWins = false;
@@ -68,7 +68,7 @@ public class HeadlessGame {
 				board = BoardUtils.performMoves(board, list);
 			}
 			if (!finished) {
-				list = blackMtd.getBestMove(board, 0, 2, black, blackPlayer);
+				list = blackMtd.getBestMove(board, 0, depth, black, blackPlayer);
 				if (list == null) {
 					finished = true;
 					whiteWins = true;
@@ -84,12 +84,23 @@ public class HeadlessGame {
 				}
 			}
 		}
-		if ((whiteWins || draw) && !learningWhite) {
+		if (whiteWins) {
 			blackPlayer.updateWeights(blackMtd.getGameData());
-		} else if ((!whiteWins || draw) && learningWhite) {
+		} else if (!draw) {
 			whitePlayer.updateWeights(whiteMtd.getGameData());
 		}
 
+		// if ((whiteWins || draw) && !learningWhite) {
+		// blackPlayer.updateWeights(blackMtd.getGameData());
+		// } else if ((!whiteWins || draw) && learningWhite) {
+		// whitePlayer.updateWeights(whiteMtd.getGameData());
+		// }
+
 		return draw ? null : whiteWins;
+
+	}
+
+	public Boolean playGame(ITD whitePlayer, ITD blackPlayer, boolean learningWhite, int i) {
+		return playGame(whitePlayer, blackPlayer, learningWhite, i, 2);
 	}
 }
