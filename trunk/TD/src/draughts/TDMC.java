@@ -9,7 +9,7 @@ public class TDMC extends TD {
 	double gammaDiscountRate = 0.5;
 	double lambdaEligibilityRate = 0.9;
 	double alfaLearningRate = 0.0001;
-	int simNumber = 500;
+	int simNumber = 1500;
 
 	public TDMC(double[] weights, double gammaDiscountRate,
 			double lambdaEligibilityRate, double alfaLearningRate, double a,
@@ -63,6 +63,7 @@ public class TDMC extends TD {
 		for (int i = 0; i < values.length; i++) {
 			text += String.valueOf((values[i])) + " ";
 		}
+		System.out.println(text);
 	}
 
 	/**
@@ -147,9 +148,13 @@ public class TDMC extends TD {
 				value += (RTLambda[j] - evluationFunctionValues[j])
 						* evaluationFunctionGradient[j][i];
 			}
-
-			getWeights()[i] = getWeights()[i] + alfaLearningRate * value;
+			if (i == 0 || i == 1 || i == 8 || i == 9)
+				getWeights()[i] = getWeights()[i] + alfaLearningRate * value
+						* 0.1;
+			else
+				getWeights()[i] = getWeights()[i] + alfaLearningRate * value;
 		}
+		printDoubleTable(weights);
 	}
 
 	@Override

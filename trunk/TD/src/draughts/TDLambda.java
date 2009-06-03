@@ -6,7 +6,7 @@ public class TDLambda extends TD {
 	private double gamma;
 	private double lambda;
 	private Boolean useMC;
-	private int simNumber = 500;
+	private int simNumber = 1000;
 
 	public TDLambda(double[] initialWeights, double a, double b,
 			double alphaLearningRate, double gammaDiscountParameter,
