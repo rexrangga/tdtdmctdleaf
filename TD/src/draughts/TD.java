@@ -34,7 +34,7 @@ public abstract class TD implements ITD {
 		for (int i = 0; i < getWeights().length; i++) {
 			sum += features[i] * getWeights()[i];
 		}
-		return sum;
+		return a * Math.tanh(b * sum);
 	}
 
 	/**
