@@ -22,7 +22,7 @@ public class PlayerUtils {
 	private static final double DEFAULT_GAMMA = 1;
 	private static final double DEFAULT_LAMBDA = 0.9;
 
-	enum PlayerKind {
+	public enum PlayerKind {
 		TD, TD_LEAF, TDMC, TDMCSimple, NO_LEARNING;
 	}
 

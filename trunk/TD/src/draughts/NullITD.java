@@ -20,6 +20,7 @@ public class NullITD implements ITD {
 			sum += features[i] * weights[i];
 		}
 		return a * Math.tanh(b * sum);
+		//return sum;
 	}
 
 	public double[] getWeigths() {

@@ -1,13 +1,12 @@
 package draughts;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Random;
+import java.io.IOException;
 
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
-import draughts.test.HeadlessGame;
+import draughts.test.PlayerUtils;
+import draughts.test.PlayerUtils.PlayerKind;
 
 /**
  * Główna klasa aplikacji, która uruchamia okno gry.
@@ -49,12 +48,22 @@ public class Main {
 		 * 
 		 * tdmc.updateWeights(gd);
 		 */
-
+		final String[] finalArgs=args;
 		java.awt.EventQueue.invokeLater(new Runnable() {
 
 			public void run() {
 				Frame f = new Frame();
 				f.setVisible(true);
+				if(finalArgs.length>0){
+					f.setArtificialGame(true);
+					
+					try {
+						f.setItd(PlayerUtils.loadPlayer(finalArgs[0],PlayerKind.NO_LEARNING));
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
 				try {
 					UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 					SwingUtilities.updateComponentTreeUI(f);
