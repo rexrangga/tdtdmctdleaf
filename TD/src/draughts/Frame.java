@@ -56,7 +56,7 @@ public class Frame extends javax.swing.JFrame {
 	}
 
 	private void chooseTD() {
-		itd = new TDLambda(weights, 1, 1, 0, 0, 0, true);
+		setItd(new TDLambda(weights, 1, 1, 0, 0, 0, true));
 	}
 
 	// <editor-fold defaultstate="collapsed"
@@ -317,7 +317,7 @@ public class Frame extends javax.swing.JFrame {
 				chatArea.append("\nTwój ruch...");
 				chatArea.setCaretPosition(chatArea.getDocument().getLength());
 				if (artificialGame) {
-					boardPanel1.makeMoves(mtd.getBestMoveDefault(boardPanel1.getCheckersArray(), myPlayer, itd));
+					boardPanel1.makeMoves(mtd.getBestMoveDefault(boardPanel1.getCheckersArray(), myPlayer, getItd()));
 				}
 			}
 		}
@@ -460,7 +460,7 @@ public class Frame extends javax.swing.JFrame {
 			chatArea.append("\nTwój ruch...");
 			yourTurn = true;
 			if (artificialGame) {
-				boardPanel1.makeMoves(mtd.getBestMoveDefault(boardPanel1.getCheckersArray(), myPlayer, itd));
+				boardPanel1.makeMoves(mtd.getBestMoveDefault(boardPanel1.getCheckersArray(), myPlayer, getItd()));
 			}
 		} else {
 			chatArea.append("\nTwój kolor : czarny...");
@@ -605,6 +605,14 @@ public class Frame extends javax.swing.JFrame {
 
 	public void setArtificialGame(boolean artificialGame) {
 		this.artificialGame = artificialGame;
+	}
+
+	public void setItd(ITD itd) {
+		this.itd = itd;
+	}
+
+	public ITD getItd() {
+		return itd;
 	}
 }
 
