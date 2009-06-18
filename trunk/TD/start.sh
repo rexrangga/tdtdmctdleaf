@@ -1,1 +1,1 @@
-java -cp "tdmc.jar" draughts.Main $0
+java -cp "tdmc.jar" draughts.Main $1
