@@ -18,8 +18,8 @@ public class HeadlessTraining {
 		}
 	};
 
-	public void train(ITD trainedPlayer, int numGames, BufferedWriter out, OpponentCreateStrategy strategy, int depth)
-			throws IOException {
+	public void train(ITD trainedPlayer, int numGames, BufferedWriter out,
+			OpponentCreateStrategy strategy, int depth) throws IOException {
 		HeadlessGame headlessGame = new HeadlessGame();
 
 		int trainedPlayerWinsCounter = 0;
@@ -38,31 +38,38 @@ public class HeadlessTraining {
 				whitePlayer = opponent;
 				blackPlayer = trainedPlayer;
 			}
-			Boolean whiteWins = headlessGame.playGame(whitePlayer, blackPlayer, trainingWhite, i, depth);
+			Boolean whiteWins = headlessGame.playGame(whitePlayer, blackPlayer,
+					trainingWhite, i, depth);
 			if (whiteWins == null) {
-				out.write("\nPartia nr " + i + " zakonczona remisem.");
 				drawCounter++;
-			} else if ((trainingWhite && whiteWins) || (!trainingWhite && !whiteWins)) {
+				out.write(i + ";" + trainedPlayerWinsCounter + ";"
+						+ drawCounter + "\n");
+			} else if ((trainingWhite && whiteWins)
+					|| (!trainingWhite && !whiteWins)) {
 				trainedPlayerWinsCounter++;
-				out.write("\nPartie nr " + i + " wygral gracz uczacy sie.");
+				out.write(i + ";" + trainedPlayerWinsCounter + ";"
+						+ drawCounter + "\n");
 			} else {
-				out.write("\nPartie nr " + i + " wygral przeciwnik.");
-				out.write(" Wektor po nauce: ");
-				ITD playingPlayer = trainingWhite ? whitePlayer : blackPlayer;
-				for (int j = 0; j < playingPlayer.getWeigths().length; j++) {
-					out.write(String.valueOf(playingPlayer.getWeigths()[j]));
-					out.write(" ");
-				}
+				out.write(i + ";" + trainedPlayerWinsCounter + ";"
+						+ drawCounter + "\n");
+				/*
+				 * out.write(" Wektor po nauce: "); ITD playingPlayer =
+				 * trainingWhite ? whitePlayer : blackPlayer; for (int j = 0; j
+				 * < playingPlayer.getWeigths().length; j++) {
+				 * out.write(String.valueOf(playingPlayer.getWeigths()[j]));
+				 * out.write(" "); }
+				 */
 			}
 			out.flush();
 		}
 
-		out.write("\nGracz uczacy sie wygral " + trainedPlayerWinsCounter + " i zremisowal " + drawCounter + " z "
-				+ numGames + " gier.");
+		out.write("\nGracz uczacy sie wygral " + trainedPlayerWinsCounter
+				+ " i zremisowal " + drawCounter + " z " + numGames + " gier.");
 
 	}
 
-	public void train(ITD trainedPlayer, int numGames, BufferedWriter out, int depth) throws IOException {
+	public void train(ITD trainedPlayer, int numGames, BufferedWriter out,
+			int depth) throws IOException {
 		train(trainedPlayer, numGames, out, RANDOM_OPPONENT, depth);
 	}
 }

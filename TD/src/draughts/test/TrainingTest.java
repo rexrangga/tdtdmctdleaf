@@ -20,6 +20,7 @@ public class TrainingTest {
 	private String firstPlayerOutFile;
 	private String secondPlayerOutFile;
 
+	// alpha, gamma, lambda
 	public TrainingTest(String[] args) throws IOException {
 		depth = Integer.parseInt(args[0]);
 		alpha = Double.parseDouble(args[1]);
@@ -31,13 +32,17 @@ public class TrainingTest {
 		ITD firstPlayer = null;
 
 		if (args.length > 8) {
-			PlayerKind firstKind = PlayerUtils.getKind(Integer.parseInt(args[6]));
-			firstPlayer = PlayerUtils.loadPlayer(args[8], firstKind, alpha, gamma, lambda);
+			PlayerKind firstKind = PlayerUtils.getKind(Integer
+					.parseInt(args[6]));
+			firstPlayer = PlayerUtils.loadPlayer(args[8], firstKind, alpha,
+					gamma, lambda);
 			// firstPlayerFile = args[8];
 			firstPlayerOutFile = args[7];
 		} else {
-			PlayerKind firstKind = PlayerUtils.getKind(Integer.parseInt(args[6]));
-			firstPlayer = PlayerUtils.createRandomPlayer(firstKind, alpha, gamma, lambda);
+			PlayerKind firstKind = PlayerUtils.getKind(Integer
+					.parseInt(args[6]));
+			firstPlayer = PlayerUtils.createRandomPlayer(firstKind, alpha,
+					gamma, lambda);
 			firstPlayerOutFile = args[7];
 		}
 
@@ -47,8 +52,10 @@ public class TrainingTest {
 		if (args.length > 10) {
 			// secondPlayerFile = args[11];
 			secondPlayerOutFile = args[10];
-			PlayerKind secondKind = PlayerUtils.getKind(Integer.parseInt(args[9]));
-			secondPlayer = PlayerUtils.loadPlayer(args[11], secondKind, alpha, gamma, lambda);
+			PlayerKind secondKind = PlayerUtils.getKind(Integer
+					.parseInt(args[9]));
+			secondPlayer = PlayerUtils.loadPlayer(args[11], secondKind, alpha,
+					gamma, lambda);
 			final ITD p = secondPlayer;
 			strategy = new OpponentCreateStrategy() {
 				public ITD getOpponent() {

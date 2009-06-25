@@ -9,7 +9,7 @@ public class TDMC extends TD {
 	double gammaDiscountRate = 0.5;
 	double lambdaEligibilityRate = 0.9;
 	double alfaLearningRate = 0.0001;
-	int simNumber = 1500;
+	int simNumber = 500;
 
 	public TDMC(double[] weights, double gammaDiscountRate,
 			double lambdaEligibilityRate, double alfaLearningRate, double a,

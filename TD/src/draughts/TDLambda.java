@@ -28,6 +28,7 @@ public class TDLambda extends TD {
 			if (useMC) {
 				double reward = (t == gameData.evaluationFunctionFeatures
 						.size() - 2 ? 0 : rewards[t + 1] - rewards[t]);
+				reward = 0.01 * reward;
 				double delta = (reward) + gamma
 						* gameData.statesEvaluations.get(t + 1)
 						- gameData.statesEvaluations.get(t);
