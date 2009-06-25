@@ -43,26 +43,31 @@ public class PlayerUtils {
 		}
 	}
 
-	public static ITD loadPlayer(String filePath, PlayerKind kind) throws IOException {
-		return loadPlayer(filePath, kind, DEFAULT_ALPHA, DEFAULT_GAMMA, DEFAULT_LAMBDA);
+	public static ITD loadPlayer(String filePath, PlayerKind kind)
+			throws IOException {
+		return loadPlayer(filePath, kind, DEFAULT_ALPHA, DEFAULT_GAMMA,
+				DEFAULT_LAMBDA);
 	}
 
-	public static ITD loadPlayer(String filePath, PlayerKind kind, double alpha, double gamma, double lambda)
-			throws IOException {
+	public static ITD loadPlayer(String filePath, PlayerKind kind,
+			double alpha, double gamma, double lambda) throws IOException {
 		BufferedReader in = null;
 		try {
 			in = new BufferedReader(new FileReader(filePath));
 			String line = in.readLine();
 			String[] tokens = line.split(" ");
 			if (tokens.length != 12) {
-				throw new IOException("wrong file format: expected 8 weights but got " + tokens.length);
+				throw new IOException(
+						"wrong file format: expected 8 weights but got "
+								+ tokens.length);
 			}
 			double[] weights = new double[12];
 			for (int i = 0; i < 12; i++) {
 				try {
 					weights[i] = Double.parseDouble(tokens[i]);
 				} catch (NumberFormatException e) {
-					throw new IOException("wrong file format: " + tokens[i] + " is not a valid double value");
+					throw new IOException("wrong file format: " + tokens[i]
+							+ " is not a valid double value");
 				}
 			}
 			switch (kind) {
@@ -71,13 +76,14 @@ public class PlayerUtils {
 			case TD_LEAF:
 				return new TDLeaf(weights, a, b, alpha, gamma, lambda);
 			case TDMC:
-				return new TDMC(weights, 0.9, 0.8, 0.0001, a, b);
+				return new TDMC(weights, gamma, lambda, alpha, a, b);
 			case TDMCSimple:
 				return new TDLambda(weights, a, b, alpha, gamma, lambda, true);
 			case NO_LEARNING:
 				return new NullITD(weights, a, b);
 			default:
-				throw new IllegalArgumentException(kind + " is not a valid learining algorithm");
+				throw new IllegalArgumentException(kind
+						+ " is not a valid learining algorithm");
 			}
 		} finally {
 			if (in != null) {
@@ -86,7 +92,8 @@ public class PlayerUtils {
 		}
 	}
 
-	public static ITD createRandomPlayer(PlayerKind kind, double alpha, double gamma, double lambda) {
+	public static ITD createRandomPlayer(PlayerKind kind, double alpha,
+			double gamma, double lambda) {
 		Random rand = new Random();
 		double[] weights = new double[12];
 		for (int i = 0; i < 12; i++) {
@@ -104,15 +111,18 @@ public class PlayerUtils {
 		case NO_LEARNING:
 			return new NullITD(weights, a, b);
 		default:
-			throw new IllegalArgumentException(kind + " is not a valid learining algorithm");
+			throw new IllegalArgumentException(kind
+					+ " is not a valid learining algorithm");
 		}
 	}
 
 	public static ITD createRandomPlayer(PlayerKind kind) {
-		return createRandomPlayer(kind, DEFAULT_ALPHA, DEFAULT_GAMMA, DEFAULT_LAMBDA);
+		return createRandomPlayer(kind, DEFAULT_ALPHA, DEFAULT_GAMMA,
+				DEFAULT_LAMBDA);
 	}
 
-	public static void savePlayer(ITD player, String filePath) throws IOException {
+	public static void savePlayer(ITD player, String filePath)
+			throws IOException {
 		BufferedWriter out = null;
 		try {
 			out = new BufferedWriter(new FileWriter(filePath));
